@@ -1,0 +1,1841 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Agro Field",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "Health",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Health"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/locations": {
+      "get": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "Locations",
+        "operationId": "locations_api_v1_locations_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Location"
+                  },
+                  "type": "array",
+                  "title": "Response Locations Api V1 Locations Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/locations.geojson": {
+      "get": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "Location Points",
+        "operationId": "location_points_api_v1_locations_geojson_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeatureCollection"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/crops": {
+      "get": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "Crops",
+        "operationId": "crops_api_v1_crops_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CropCatalog"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/map-layers": {
+      "get": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "Map Layers",
+        "operationId": "map_layers_api_v1_map_layers_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/MapLayer"
+                  },
+                  "type": "array",
+                  "title": "Response Map Layers Api V1 Map Layers Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/map-layers/{layer_id}/preview": {
+      "get": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "Map Preview",
+        "operationId": "map_preview_api_v1_map_layers__layer_id__preview_get",
+        "parameters": [
+          {
+            "name": "layer_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Layer Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/metadata": {
+      "get": {
+        "tags": [
+          "Catalog"
+        ],
+        "summary": "Metadata",
+        "operationId": "metadata_api_v1_metadata_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Metadata"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/explore": {
+      "post": {
+        "tags": [
+          "Analysis"
+        ],
+        "summary": "Explore Conditions",
+        "operationId": "explore_conditions_api_v1_explore_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExploreRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExploreResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rotation-comparisons": {
+      "post": {
+        "tags": [
+          "Analysis"
+        ],
+        "summary": "Rotation Comparison",
+        "operationId": "rotation_comparison_api_v1_rotation_comparisons_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RotationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RotationResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/exports/pdf": {
+      "post": {
+        "tags": [
+          "Exports"
+        ],
+        "summary": "Export Pdf",
+        "operationId": "export_pdf_api_v1_exports_pdf_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/pdf": {}
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AlternativeSlot": {
+        "properties": {
+          "strategy_id": {
+            "type": "string",
+            "title": "Strategy Id"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "strategy_id",
+          "reason"
+        ],
+        "title": "AlternativeSlot"
+      },
+      "CriterionCheck": {
+        "properties": {
+          "criterion": {
+            "type": "string",
+            "title": "Criterion"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pass",
+              "fail",
+              "unknown"
+            ],
+            "title": "Status"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason"
+          },
+          "rule_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rule Id"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source Url"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "criterion",
+          "status",
+          "reason"
+        ],
+        "title": "CriterionCheck"
+      },
+      "CropCatalog": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/CropReference"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "warnings": {
+            "items": {
+              "$ref": "#/components/schemas/Warning"
+            },
+            "type": "array",
+            "title": "Warnings"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "items",
+          "warnings"
+        ],
+        "title": "CropCatalog"
+      },
+      "CropHistory": {
+        "properties": {
+          "season_label": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Season Label"
+          },
+          "crops": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 12,
+            "title": "Crops"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "season_label",
+          "crops"
+        ],
+        "title": "CropHistory"
+      },
+      "CropReference": {
+        "properties": {
+          "crop_id": {
+            "type": "string",
+            "title": "Crop Id"
+          },
+          "crop_name": {
+            "type": "string",
+            "title": "Crop Name"
+          },
+          "scientific_name": {
+            "type": "string",
+            "title": "Scientific Name"
+          },
+          "ecocrop_id": {
+            "type": "integer",
+            "title": "Ecocrop Id"
+          },
+          "temperature_c_optimal_min": {
+            "type": "number",
+            "title": "Temperature C Optimal Min"
+          },
+          "temperature_c_optimal_max": {
+            "type": "number",
+            "title": "Temperature C Optimal Max"
+          },
+          "temperature_c_absolute_min": {
+            "type": "number",
+            "title": "Temperature C Absolute Min"
+          },
+          "temperature_c_absolute_max": {
+            "type": "number",
+            "title": "Temperature C Absolute Max"
+          },
+          "annual_rainfall_mm_optimal_min": {
+            "type": "number",
+            "title": "Annual Rainfall Mm Optimal Min"
+          },
+          "annual_rainfall_mm_optimal_max": {
+            "type": "number",
+            "title": "Annual Rainfall Mm Optimal Max"
+          },
+          "annual_rainfall_mm_absolute_min": {
+            "type": "number",
+            "title": "Annual Rainfall Mm Absolute Min"
+          },
+          "annual_rainfall_mm_absolute_max": {
+            "type": "number",
+            "title": "Annual Rainfall Mm Absolute Max"
+          },
+          "soil_ph_optimal_min": {
+            "type": "number",
+            "title": "Soil Ph Optimal Min"
+          },
+          "soil_ph_optimal_max": {
+            "type": "number",
+            "title": "Soil Ph Optimal Max"
+          },
+          "soil_ph_absolute_min": {
+            "type": "number",
+            "title": "Soil Ph Absolute Min"
+          },
+          "soil_ph_absolute_max": {
+            "type": "number",
+            "title": "Soil Ph Absolute Max"
+          },
+          "crop_cycle_days_min": {
+            "type": "integer",
+            "title": "Crop Cycle Days Min"
+          },
+          "crop_cycle_days_max": {
+            "type": "integer",
+            "title": "Crop Cycle Days Max"
+          },
+          "soil_texture_optimal": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Soil Texture Optimal"
+          },
+          "soil_texture_absolute": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Soil Texture Absolute"
+          },
+          "soil_drainage_optimal": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Soil Drainage Optimal"
+          },
+          "soil_drainage_absolute": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Soil Drainage Absolute"
+          },
+          "source_resource": {
+            "type": "string",
+            "title": "Source Resource"
+          },
+          "source_url": {
+            "type": "string",
+            "title": "Source Url"
+          },
+          "local_variety_validated": {
+            "type": "boolean",
+            "title": "Local Variety Validated"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "crop_id",
+          "crop_name",
+          "scientific_name",
+          "ecocrop_id",
+          "temperature_c_optimal_min",
+          "temperature_c_optimal_max",
+          "temperature_c_absolute_min",
+          "temperature_c_absolute_max",
+          "annual_rainfall_mm_optimal_min",
+          "annual_rainfall_mm_optimal_max",
+          "annual_rainfall_mm_absolute_min",
+          "annual_rainfall_mm_absolute_max",
+          "soil_ph_optimal_min",
+          "soil_ph_optimal_max",
+          "soil_ph_absolute_min",
+          "soil_ph_absolute_max",
+          "crop_cycle_days_min",
+          "crop_cycle_days_max",
+          "soil_texture_optimal",
+          "soil_texture_absolute",
+          "soil_drainage_optimal",
+          "soil_drainage_absolute",
+          "source_resource",
+          "source_url",
+          "local_variety_validated"
+        ],
+        "title": "CropReference"
+      },
+      "Description": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "evidence_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Evidence Ids"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "text",
+          "evidence_ids"
+        ],
+        "title": "Description"
+      },
+      "ExploreRequest": {
+        "properties": {
+          "location_id": {
+            "type": "string",
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Location Id"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date",
+            "title": "Start Date"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date",
+            "title": "End Date"
+          },
+          "categories": {
+            "items": {
+              "type": "string",
+              "enum": [
+                "rainfall",
+                "temperature",
+                "soil_wetness"
+              ]
+            },
+            "type": "array",
+            "maxItems": 3,
+            "minItems": 1,
+            "title": "Categories"
+          },
+          "interval": {
+            "type": "string",
+            "enum": [
+              "daily",
+              "monthly"
+            ],
+            "title": "Interval",
+            "default": "monthly"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "location_id",
+          "start_date",
+          "end_date",
+          "categories"
+        ],
+        "title": "ExploreRequest"
+      },
+      "ExploreResponse": {
+        "properties": {
+          "analysis_id": {
+            "type": "string",
+            "title": "Analysis Id"
+          },
+          "request": {
+            "$ref": "#/components/schemas/ExploreRequest"
+          },
+          "location": {
+            "$ref": "#/components/schemas/Location"
+          },
+          "panels": {
+            "items": {
+              "$ref": "#/components/schemas/Panel"
+            },
+            "type": "array",
+            "title": "Panels"
+          },
+          "statistics": {
+            "items": {
+              "$ref": "#/components/schemas/Statistic"
+            },
+            "type": "array",
+            "title": "Statistics"
+          },
+          "descriptions": {
+            "items": {
+              "$ref": "#/components/schemas/Description"
+            },
+            "type": "array",
+            "title": "Descriptions"
+          },
+          "selected_location_geojson": {
+            "$ref": "#/components/schemas/Feature"
+          },
+          "map_references": {
+            "items": {
+              "$ref": "#/components/schemas/MapLayer"
+            },
+            "type": "array",
+            "title": "Map References"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/Source"
+            },
+            "type": "array",
+            "title": "Sources"
+          },
+          "warnings": {
+            "items": {
+              "$ref": "#/components/schemas/Warning"
+            },
+            "type": "array",
+            "title": "Warnings"
+          },
+          "data_version": {
+            "type": "string",
+            "title": "Data Version"
+          },
+          "methods_version": {
+            "type": "string",
+            "title": "Methods Version"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "analysis_id",
+          "request",
+          "location",
+          "panels",
+          "statistics",
+          "descriptions",
+          "selected_location_geojson",
+          "map_references",
+          "sources",
+          "warnings",
+          "data_version",
+          "methods_version"
+        ],
+        "title": "ExploreResponse"
+      },
+      "ExportRequest": {
+        "properties": {
+          "exploration": {
+            "$ref": "#/components/schemas/ExploreRequest"
+          },
+          "rotation": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/RotationRequest"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "exploration"
+        ],
+        "title": "ExportRequest"
+      },
+      "Feature": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "Feature",
+            "title": "Type",
+            "default": "Feature"
+          },
+          "geometry": {
+            "$ref": "#/components/schemas/Geometry"
+          },
+          "properties": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Properties"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "geometry",
+          "properties"
+        ],
+        "title": "Feature"
+      },
+      "FeatureCollection": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "FeatureCollection",
+            "title": "Type",
+            "default": "FeatureCollection"
+          },
+          "features": {
+            "items": {
+              "$ref": "#/components/schemas/Feature"
+            },
+            "type": "array",
+            "title": "Features"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "features"
+        ],
+        "title": "FeatureCollection"
+      },
+      "Geometry": {
+        "properties": {
+          "type": {
+            "type": "string",
+            "const": "Point",
+            "title": "Type",
+            "default": "Point"
+          },
+          "coordinates": {
+            "prefixItems": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "number"
+              }
+            ],
+            "type": "array",
+            "maxItems": 2,
+            "minItems": 2,
+            "title": "Coordinates"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "coordinates"
+        ],
+        "title": "Geometry"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Health": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "ok"
+          },
+          "data_loaded": {
+            "type": "boolean",
+            "title": "Data Loaded",
+            "default": true
+          },
+          "application_version": {
+            "type": "string",
+            "title": "Application Version"
+          },
+          "data_version": {
+            "type": "string",
+            "title": "Data Version"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "application_version",
+          "data_version"
+        ],
+        "title": "Health"
+      },
+      "LegendEntry": {
+        "properties": {
+          "class_code": {
+            "type": "integer",
+            "title": "Class Code"
+          },
+          "source_label": {
+            "type": "string",
+            "title": "Source Label"
+          },
+          "red": {
+            "type": "integer",
+            "title": "Red"
+          },
+          "green": {
+            "type": "integer",
+            "title": "Green"
+          },
+          "blue": {
+            "type": "integer",
+            "title": "Blue"
+          },
+          "alpha": {
+            "type": "integer",
+            "title": "Alpha"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "class_code",
+          "source_label",
+          "red",
+          "green",
+          "blue",
+          "alpha"
+        ],
+        "title": "LegendEntry"
+      },
+      "Location": {
+        "properties": {
+          "location_id": {
+            "type": "string",
+            "title": "Location Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "region": {
+            "type": "string",
+            "title": "Region"
+          },
+          "latitude": {
+            "type": "number",
+            "title": "Latitude"
+          },
+          "longitude": {
+            "type": "number",
+            "title": "Longitude"
+          },
+          "coverage_start": {
+            "type": "string",
+            "format": "date",
+            "title": "Coverage Start"
+          },
+          "coverage_end": {
+            "type": "string",
+            "format": "date",
+            "title": "Coverage End"
+          },
+          "spatial_scope": {
+            "type": "string",
+            "title": "Spatial Scope",
+            "default": "gridded_point_sample"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "location_id",
+          "name",
+          "region",
+          "latitude",
+          "longitude",
+          "coverage_start",
+          "coverage_end"
+        ],
+        "title": "Location"
+      },
+      "MapLayer": {
+        "properties": {
+          "layer_id": {
+            "type": "string",
+            "title": "Layer Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "crop": {
+            "type": "string",
+            "title": "Crop"
+          },
+          "management": {
+            "type": "string",
+            "title": "Management"
+          },
+          "water_supply": {
+            "type": "string",
+            "title": "Water Supply"
+          },
+          "baseline": {
+            "type": "string",
+            "title": "Baseline"
+          },
+          "resolution": {
+            "type": "string",
+            "title": "Resolution"
+          },
+          "source_raster_bbox": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "title": "Source Raster Bbox"
+          },
+          "crs": {
+            "type": "string",
+            "title": "Crs"
+          },
+          "legend": {
+            "items": {
+              "$ref": "#/components/schemas/LegendEntry"
+            },
+            "type": "array",
+            "title": "Legend"
+          },
+          "preview_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Preview Url"
+          },
+          "image_role": {
+            "type": "string",
+            "title": "Image Role",
+            "default": "reference_preview_not_georeferenced_overlay"
+          },
+          "source": {
+            "$ref": "#/components/schemas/Source"
+          },
+          "limitations": {
+            "type": "string",
+            "title": "Limitations"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "layer_id",
+          "name",
+          "crop",
+          "management",
+          "water_supply",
+          "baseline",
+          "resolution",
+          "source_raster_bbox",
+          "crs",
+          "legend",
+          "preview_url",
+          "source",
+          "limitations"
+        ],
+        "title": "MapLayer"
+      },
+      "Metadata": {
+        "properties": {
+          "coverage_start": {
+            "type": "string",
+            "format": "date",
+            "title": "Coverage Start"
+          },
+          "coverage_end": {
+            "type": "string",
+            "format": "date",
+            "title": "Coverage End"
+          },
+          "time_standard": {
+            "type": "string",
+            "title": "Time Standard",
+            "default": "UTC"
+          },
+          "categories": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Categories"
+          },
+          "intervals": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Intervals"
+          },
+          "series": {
+            "items": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Series"
+          },
+          "features": {
+            "additionalProperties": {
+              "type": "boolean"
+            },
+            "type": "object",
+            "title": "Features"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/Source"
+            },
+            "type": "array",
+            "title": "Sources"
+          },
+          "warnings": {
+            "items": {
+              "$ref": "#/components/schemas/Warning"
+            },
+            "type": "array",
+            "title": "Warnings"
+          },
+          "data_version": {
+            "type": "string",
+            "title": "Data Version"
+          },
+          "methods_version": {
+            "type": "string",
+            "title": "Methods Version"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "coverage_start",
+          "coverage_end",
+          "categories",
+          "intervals",
+          "series",
+          "features",
+          "sources",
+          "warnings",
+          "data_version",
+          "methods_version"
+        ],
+        "title": "Metadata"
+      },
+      "Panel": {
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "rainfall",
+              "temperature",
+              "soil_wetness"
+            ],
+            "title": "Category"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "x_axis_label": {
+            "type": "string",
+            "title": "X Axis Label",
+            "default": "Date (UTC)"
+          },
+          "y_axis_label": {
+            "type": "string",
+            "title": "Y Axis Label"
+          },
+          "series": {
+            "items": {
+              "$ref": "#/components/schemas/Series"
+            },
+            "type": "array",
+            "title": "Series"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "category",
+          "title",
+          "y_axis_label",
+          "series"
+        ],
+        "title": "Panel"
+      },
+      "PlannedSeason": {
+        "properties": {
+          "season_label": {
+            "type": "string",
+            "title": "Season Label",
+            "default": "Planned season"
+          },
+          "crops": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 12,
+            "title": "Crops"
+          },
+          "season": {
+            "type": "integer",
+            "maximum": 3.0,
+            "minimum": 1.0,
+            "title": "Season"
+          },
+          "planting_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Planting Date"
+          },
+          "harvest_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Harvest Date"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "crops",
+          "season"
+        ],
+        "title": "PlannedSeason"
+      },
+      "RotationRequest": {
+        "properties": {
+          "exploration": {
+            "$ref": "#/components/schemas/ExploreRequest"
+          },
+          "crop_history": {
+            "items": {
+              "$ref": "#/components/schemas/CropHistory"
+            },
+            "type": "array",
+            "maxItems": 20,
+            "minItems": 1,
+            "title": "Crop History"
+          },
+          "baseline_sequence": {
+            "items": {
+              "$ref": "#/components/schemas/PlannedSeason"
+            },
+            "type": "array",
+            "maxItems": 3,
+            "minItems": 3,
+            "title": "Baseline Sequence"
+          },
+          "water_supply": {
+            "type": "string",
+            "enum": [
+              "rainfall_only",
+              "limited_irrigation",
+              "reliable_irrigation",
+              "unknown"
+            ],
+            "title": "Water Supply",
+            "default": "unknown"
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "improve_soil",
+              "conserve_water",
+              "reduce_pests",
+              "income",
+              "general"
+            ],
+            "title": "Priority",
+            "default": "general"
+          },
+          "excluded_crops": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 30,
+            "title": "Excluded Crops"
+          },
+          "preferred_crops": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 30,
+            "title": "Preferred Crops"
+          },
+          "soil": {
+            "$ref": "#/components/schemas/SoilInput"
+          },
+          "repeats": {
+            "type": "boolean",
+            "title": "Repeats",
+            "default": false
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "exploration",
+          "crop_history",
+          "baseline_sequence"
+        ],
+        "title": "RotationRequest"
+      },
+      "RotationResponse": {
+        "properties": {
+          "assessment_id": {
+            "type": "string",
+            "title": "Assessment Id"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "assessed",
+              "provisional",
+              "insufficient_evidence"
+            ],
+            "title": "Status"
+          },
+          "baseline": {
+            "$ref": "#/components/schemas/Strategy"
+          },
+          "alternatives": {
+            "items": {
+              "$ref": "#/components/schemas/Strategy"
+            },
+            "type": "array",
+            "title": "Alternatives"
+          },
+          "unfilled_alternative_slots": {
+            "items": {
+              "$ref": "#/components/schemas/AlternativeSlot"
+            },
+            "type": "array",
+            "title": "Unfilled Alternative Slots"
+          },
+          "environmental_context": {
+            "$ref": "#/components/schemas/ExploreResponse"
+          },
+          "priority": {
+            "type": "string",
+            "title": "Priority"
+          },
+          "rules_version": {
+            "type": "string",
+            "title": "Rules Version"
+          },
+          "criteria": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Criteria"
+          },
+          "missing_information": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Missing Information"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/Source"
+            },
+            "type": "array",
+            "title": "Sources"
+          },
+          "warnings": {
+            "items": {
+              "$ref": "#/components/schemas/Warning"
+            },
+            "type": "array",
+            "title": "Warnings"
+          },
+          "candidate_counts": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Candidate Counts"
+          },
+          "selection_method": {
+            "type": "string",
+            "title": "Selection Method",
+            "default": "constraint_checks_then_explicit_crop_preferences; no agronomic overall score"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "assessment_id",
+          "status",
+          "baseline",
+          "alternatives",
+          "unfilled_alternative_slots",
+          "environmental_context",
+          "priority",
+          "rules_version",
+          "criteria",
+          "missing_information",
+          "sources",
+          "warnings",
+          "candidate_counts"
+        ],
+        "title": "RotationResponse"
+      },
+      "Series": {
+        "properties": {
+          "series_id": {
+            "type": "string",
+            "title": "Series Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "unit": {
+            "type": "string",
+            "title": "Unit"
+          },
+          "aggregation": {
+            "type": "string",
+            "title": "Aggregation"
+          },
+          "visible_by_default": {
+            "type": "boolean",
+            "title": "Visible By Default",
+            "default": true
+          },
+          "points": {
+            "items": {
+              "$ref": "#/components/schemas/SeriesPoint"
+            },
+            "type": "array",
+            "title": "Points"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "series_id",
+          "label",
+          "unit",
+          "aggregation",
+          "points"
+        ],
+        "title": "Series"
+      },
+      "SeriesPoint": {
+        "properties": {
+          "period_start": {
+            "type": "string",
+            "format": "date",
+            "title": "Period Start"
+          },
+          "period_end": {
+            "type": "string",
+            "format": "date",
+            "title": "Period End"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          },
+          "expected_days": {
+            "type": "integer",
+            "title": "Expected Days"
+          },
+          "valid_days": {
+            "type": "integer",
+            "title": "Valid Days"
+          },
+          "coverage_fraction": {
+            "type": "number",
+            "title": "Coverage Fraction"
+          },
+          "partial_calendar_month": {
+            "type": "boolean",
+            "title": "Partial Calendar Month"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "period_start",
+          "period_end",
+          "value",
+          "expected_days",
+          "valid_days",
+          "coverage_fraction",
+          "partial_calendar_month"
+        ],
+        "title": "SeriesPoint"
+      },
+      "SoilInput": {
+        "properties": {
+          "ph": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 14.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ph"
+          },
+          "texture": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Texture"
+          },
+          "organic_carbon_percent": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Organic Carbon Percent"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "title": "SoilInput"
+      },
+      "Source": {
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "title": "Source Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "period": {
+            "type": "string",
+            "title": "Period"
+          },
+          "limitations": {
+            "type": "string",
+            "title": "Limitations"
+          },
+          "license": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "License"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "source_id",
+          "name",
+          "url",
+          "period",
+          "limitations"
+        ],
+        "title": "Source"
+      },
+      "Statistic": {
+        "properties": {
+          "metric_id": {
+            "type": "string",
+            "title": "Metric Id"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label"
+          },
+          "value": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Value"
+          },
+          "unit": {
+            "type": "string",
+            "title": "Unit"
+          },
+          "aggregation": {
+            "type": "string",
+            "title": "Aggregation"
+          },
+          "expected_days": {
+            "type": "integer",
+            "title": "Expected Days"
+          },
+          "valid_days": {
+            "type": "integer",
+            "title": "Valid Days"
+          },
+          "date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Date"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "metric_id",
+          "label",
+          "value",
+          "unit",
+          "aggregation",
+          "expected_days",
+          "valid_days"
+        ],
+        "title": "Statistic"
+      },
+      "Strategy": {
+        "properties": {
+          "strategy_id": {
+            "type": "string",
+            "title": "Strategy Id"
+          },
+          "sequence": {
+            "items": {
+              "$ref": "#/components/schemas/PlannedSeason"
+            },
+            "type": "array",
+            "title": "Sequence"
+          },
+          "feasibility_status": {
+            "type": "string",
+            "enum": [
+              "feasible_for_declared_checks",
+              "infeasible",
+              "unknown"
+            ],
+            "title": "Feasibility Status"
+          },
+          "checks": {
+            "items": {
+              "$ref": "#/components/schemas/CriterionCheck"
+            },
+            "type": "array",
+            "title": "Checks"
+          },
+          "explanations": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Explanations"
+          },
+          "potential_benefits": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Potential Benefits"
+          },
+          "tradeoffs": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tradeoffs"
+          },
+          "local_review_required": {
+            "type": "boolean",
+            "title": "Local Review Required",
+            "default": true
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "strategy_id",
+          "sequence",
+          "feasibility_status",
+          "checks",
+          "explanations"
+        ],
+        "title": "Strategy"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "Warning": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "field": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Field"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "title": "Warning"
+      }
+    }
+  }
+}
