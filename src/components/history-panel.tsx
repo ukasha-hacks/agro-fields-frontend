@@ -14,6 +14,8 @@ import { HistoryChart } from './history-chart';
 import { HelpTip } from './help-tip';
 import { Button } from './ui/button';
 import { StatusMessage } from './status-message';
+import { PeriodSummary } from './period-summary';
+import { SeasonalHistory } from './seasonal-history';
 
 export function HistoryPanel({ locations }: { locations: Location[] }) {
   const [state, setState] = useQueryStates(urlParsers, { history: 'replace', shallow: true });
@@ -37,6 +39,10 @@ export function HistoryPanel({ locations }: { locations: Location[] }) {
   const max = Math.max(0, points.length - 1);
   const cursor = state.cursor > max ? -1 : state.cursor;
   const selectionKey = JSON.stringify(selection);
+  useEffect(() => {
+    if (data && state.focus)
+      document.getElementById(`evidence-${state.focus}`)?.scrollIntoView({ block: 'start' });
+  }, [data, state.focus]);
   useEffect(() => {
     setPlaying(false);
   }, [selectionKey]);
@@ -63,7 +69,7 @@ export function HistoryPanel({ locations }: { locations: Location[] }) {
     <div className="space-y-7">
       <form
         onSubmit={form.handleSubmit(() => {
-          void setState({ cursor: -1 });
+          void setState({ cursor: -1, focus: null });
         })}
         className="space-y-4"
         noValidate
@@ -78,7 +84,7 @@ export function HistoryPanel({ locations }: { locations: Location[] }) {
               max="2025-12-31"
               {...form.register('start_date', {
                 onChange: (e) => {
-                  void setState({ from: e.target.value, cursor: -1 });
+                  void setState({ from: e.target.value, cursor: -1, focus: null });
                 },
               })}
               aria-invalid={!!fieldError('start_date')}
@@ -97,7 +103,7 @@ export function HistoryPanel({ locations }: { locations: Location[] }) {
               max="2025-12-31"
               {...form.register('end_date', {
                 onChange: (e) => {
-                  void setState({ to: e.target.value, cursor: -1 });
+                  void setState({ to: e.target.value, cursor: -1, focus: null });
                 },
               })}
               aria-invalid={!!fieldError('end_date')}
@@ -129,6 +135,7 @@ export function HistoryPanel({ locations }: { locations: Location[] }) {
                         ? [...state.topics, topic]
                         : state.topics.filter((v) => v !== topic),
                       cursor: -1,
+                      focus: null,
                     });
                   }}
                 />
@@ -153,7 +160,7 @@ export function HistoryPanel({ locations }: { locations: Location[] }) {
               id="interval"
               {...form.register('interval', {
                 onChange: (e) => {
-                  void setState({ interval: e.target.value, cursor: -1 });
+                  void setState({ interval: e.target.value, cursor: -1, focus: null });
                 },
               })}
             >
@@ -190,28 +197,7 @@ export function HistoryPanel({ locations }: { locations: Location[] }) {
       <StatusMessage loading={loading} error={error} retry={refetch} kind="history" />
       {data && (
         <>
-          <section className="summary-strip">
-            {data.statistics
-              .filter((s) =>
-                ['rainfall_total_mm', 'temperature_mean_c', 'surface_soil_wetness_mean'].includes(
-                  s.metric_id,
-                ),
-              )
-              .map((s) => (
-                <div key={s.metric_id}>
-                  <p>{s.label}</p>
-                  <strong>
-                    {formatValue(s.value, s.unit === 'dimensionless_index' ? 3 : 1)}{' '}
-                    <small>
-                      {s.unit === 'dimensionless_index' ? '/ 1' : s.unit === 'degC' ? '°C' : s.unit}
-                    </small>
-                  </strong>
-                  <span>
-                    {s.valid_days}/{s.expected_days} days present
-                  </span>
-                </div>
-              ))}
-          </section>
+          <PeriodSummary statistics={data.statistics} />
           <div className="replay">
             <div className="flex flex-wrap items-center gap-2">
               <p className="text-sm font-medium">Walk through the past</p>
@@ -252,7 +238,7 @@ export function HistoryPanel({ locations }: { locations: Location[] }) {
                 className="text-xs underline"
                 onClick={() => {
                   setPlaying(false);
-                  void setState({ cursor: -1 });
+                  void setState({ cursor: -1, focus: null });
                 }}
               >
                 All
@@ -289,6 +275,7 @@ export function HistoryPanel({ locations }: { locations: Location[] }) {
               <HistoryChart key={panel.category} panel={panel} type={state.chart} cursor={cursor} />
             ))}
           </div>
+          <SeasonalHistory area={state.area} />
           <section className="insight-block">
             <p className="eyebrow">What the archive shows</p>
             {data.descriptions.map((item) => (

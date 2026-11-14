@@ -64,7 +64,7 @@ export function Explorer() {
         locations={locations}
         selected={selected}
         onSelect={(area) => {
-          void setState({ area, cursor: -1, details: true }, { history: 'push' });
+          void setState({ area, cursor: -1, focus: null, details: true }, { history: 'push' });
         }}
       />
       <div className="map-search">
@@ -85,6 +85,10 @@ export function Explorer() {
               Common questions
               <ArrowRight size={15} />
             </Link>
+            <Link className="menu-link" href={infoLink('/methodology')}>
+              How we read the data
+              <ArrowRight size={15} />
+            </Link>
             <Link className="menu-link" href={infoLink('/sources')}>
               Data and sources
               <ArrowRight size={15} />
@@ -95,7 +99,7 @@ export function Explorer() {
           locations={locations}
           selected={selected}
           onSelect={(area) => {
-            void setState({ area, cursor: -1, details: true }, { history: 'push' });
+            void setState({ area, cursor: -1, focus: null, details: true }, { history: 'push' });
           }}
         />
         <Button

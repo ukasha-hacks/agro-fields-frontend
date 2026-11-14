@@ -34,10 +34,11 @@ const post = (path, body) =>
   });
 try {
   let ready = false;
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 50; i++) {
     try {
-      const r = await get(base + 'locations');
-      if (r.ok) {
+      const health = await get('http://127.0.0.1:8087/health');
+      const r = health.ok ? await get(base + 'locations') : null;
+      if (r?.ok) {
         ready = true;
         break;
       }

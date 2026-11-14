@@ -20,6 +20,7 @@ export const urlParsers = {
   view: parseAsStringEnum(['map', 'history', 'farm', 'results']).withDefault('map'),
   chart: parseAsStringEnum(['line', 'bar']).withDefault('line'),
   cursor: parseAsInteger.withDefault(-1),
+  focus: parseAsStringEnum(['rainfall', 'temperature', 'soil_wetness']),
   step: parseAsInteger.withDefault(1),
   farm: parseAsJson<FarmerValues>((value) => farmerSchema.parse(value)),
 };

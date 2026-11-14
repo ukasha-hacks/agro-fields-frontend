@@ -8,6 +8,9 @@
   --accent: #d2ef20;
   --green: #245e3a;
   --soft: #e9efdf;
+  --chart-green: #367a4a;
+  --chart-blue: #276fa1;
+  --chart-amber: #91621c;
   --shadow: 0 16px 70px #15332912;
 }
 [data-theme='dark'] {
@@ -19,6 +22,9 @@
   --accent: #d2ef20;
   --green: #7dc48c;
   --soft: #203827;
+  --chart-green: #90c99b;
+  --chart-blue: #69b9e9;
+  --chart-amber: #e5b568;
   --shadow: 0 16px 70px #0004;
 }
 @theme inline {
@@ -1561,4 +1567,137 @@ button svg {
 .rotation-launch {
   display: flex;
   align-items: center;
+}
+
+.stat-groups {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.stat-groups article {
+  padding: 1rem;
+  background: var(--paper);
+  border-radius: 0.8rem;
+}
+.stat-groups h4 {
+  font-size: 0.85rem;
+}
+.stat-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding-top: 0.9rem;
+}
+.stat-row dt {
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+.stat-row dd {
+  margin: 0;
+}
+.stat-row strong {
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+.stat-row strong small {
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+.stat-row dd span {
+  display: block;
+  font-size: 0.7rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.season-windows {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+.season-windows article {
+  padding: 1rem;
+  background: var(--paper);
+  border-radius: 0.8rem;
+}
+.season-windows p {
+  font-size: 0.8rem;
+  line-height: 1.65;
+  margin-top: 0.65rem;
+}
+.data-table caption {
+  text-align: left;
+  margin-bottom: 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+.method-table {
+  max-height: none;
+}
+.method-table .data-table {
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+.method-table td {
+  min-width: 11rem;
+  vertical-align: top;
+}
+.method-table th {
+  vertical-align: top;
+}
+.history-chart {
+  scroll-margin-top: 1rem;
+}
+.info-body .term-status {
+  font-size: 0.8rem;
+  color: var(--ink);
+}
+.sheet-heading {
+  flex-shrink: 0;
+}
+.sheet-heading > div {
+  min-width: 0;
+}
+@media (max-width: 420px) {
+  .stat-groups {
+    grid-template-columns: 1fr;
+  }
+}
+.period-headlines {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.1rem;
+  padding: 1.1rem;
+  margin-top: 1rem;
+  border-radius: 1rem;
+  background: var(--paper);
+}
+.period-headlines p {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+.period-headlines strong {
+  display: block;
+  margin: 0.25rem 0;
+  font-weight: 500;
+  font-size: 1.5rem;
+  letter-spacing: -0.04em;
+}
+.period-headlines small {
+  font-size: 0.75rem;
+  letter-spacing: normal;
+}
+.period-headlines span {
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+.period-details {
+  margin-top: 0.8rem;
+  font-size: 0.8rem;
+}
+.period-details > summary {
+  padding: 0.5rem 0;
 }

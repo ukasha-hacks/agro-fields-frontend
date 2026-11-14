@@ -28,7 +28,23 @@ export function SourceContent() {
           listed FAO GAEZ portal.
         </p>
       </section>
-      <StatusMessage loading={metadata.loading} error={metadata.error} retry={metadata.refetch} kind="sources" />
+      <section>
+        <h2>Used here, or explained only?</h2>
+        <p>
+          The working graphs use GPM IMERG rainfall and NASA POWER / MERRA-2 temperature and
+          wetness. SMAP and MODIS/Landsat NDVI are not in the local archive. Wetness is not being
+          relabelled as SMAP, and the GAEZ outline is map context only.
+        </p>
+        <p>
+          <a href="/methodology">Read the years, source scales and calculation methods.</a>
+        </p>
+      </section>
+      <StatusMessage
+        loading={metadata.loading}
+        error={metadata.error}
+        retry={metadata.refetch}
+        kind="sources"
+      />
       {metadata.data && (
         <section>
           <h2>Data behind this view</h2>
