@@ -30,6 +30,8 @@ import { AppearanceMenu } from './appearance-menu';
 import { HelpTip } from './help-tip';
 import { HistoryPanel } from './history-panel';
 import { StatusMessage } from './status-message';
+import { FarmerForm } from './farmer-form';
+import { RotationResults } from './rotation-results';
 
 export function Explorer() {
   const [state, setState] = useQueryStates(urlParsers, { history: 'replace', shallow: true });
@@ -292,8 +294,10 @@ export function Explorer() {
       >
         {state.view === 'history' ? (
           <HistoryPanel locations={locations} />
+        ) : state.view === 'farm' ? (
+          <FarmerForm locations={locations} />
         ) : (
-          <div className="insight-block"><p>The farmer form and assessment are available on stage/03-farmer-workflow.</p><Button variant="secondary" onClick={() => open('history')}>Explore history</Button></div>
+          <RotationResults locations={locations} />
         )}
       </Sheet>
     </main>
