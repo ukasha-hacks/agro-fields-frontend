@@ -1,0 +1,6 @@
+node_modules
+.next
+public/maps
+src/lib/api-schema.d.ts
+docs/backend-openapi.json
+package-lock.json

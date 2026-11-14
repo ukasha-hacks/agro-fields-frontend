@@ -10,6 +10,7 @@ All rainfall, temperature, wetness, crop references and maize map results come f
 The only added geographic asset is downloaded from a map linked by the listed FAO GAEZ portal. It is not taken from an unrelated boundary provider.
 
 Discovery chain:
+
 1. FAO GAEZ portal: https://gaez.fao.org/
 2. Its Country Profile map: https://www.arcgis.com/home/item.html?id=af5a56e3092242cfa543faab7e3f5ed9
 3. That map's GAEZ Country Status layer: https://services5.arcgis.com/sjP4Ugu5s0dZWLjd/arcgis/rest/services/GAEZ_Country_Status/FeatureServer/0
