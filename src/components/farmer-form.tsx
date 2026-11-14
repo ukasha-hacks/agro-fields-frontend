@@ -132,7 +132,7 @@ export function FarmerForm({ locations }: { locations: Location[] }) {
           </Button>
         </div>
       )}
-      <StatusMessage loading={catalog.loading} error={catalog.error} retry={catalog.refetch} />
+      <StatusMessage loading={catalog.loading} error={catalog.error} retry={catalog.refetch} kind="form" />
       {catalog.data && (
         <form onSubmit={form.handleSubmit(submit, showErrors)} noValidate className="space-y-6">
           {step === 1 && (

@@ -3,18 +3,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useQueryStates } from 'nuqs';
 import { useSearchParams } from 'next/navigation';
-import {
-  ArrowRight,
-  Check,
-  ChevronRight,
-  Copy,
-  Leaf,
-  MapPin,
-  Menu,
-  MoveUpRight,
-  Sprout,
-  X,
-} from 'lucide-react';
+import { ArrowRight, Check, Copy, MapPin, Menu, MoveUpRight, Sprout, X } from 'lucide-react';
 import { motion } from 'motion/react';
 import { type Location, type ExploreResponse } from '@/lib/api';
 import { useApi } from '@/lib/use-api';
@@ -109,9 +98,30 @@ export function Explorer() {
             void setState({ area, cursor: -1, details: true }, { history: 'push' });
           }}
         />
-        <Link href="/" aria-label="Agro Field home" className="search-brand">
+        <Button
+          className="search-brand rotation-launch"
+          aria-label="Plan your crop rotation"
+          title="Plan your crop rotation"
+          disabled={!selected}
+          onClick={() => open('farm')}
+        >
           <Sprout size={21} />
-        </Link>
+          <span>Plan rotation</span>
+        </Button>
+      </div>
+      <div className="map-intro">
+        <p>Explore past conditions before you plan your next crop.</p>
+        <ol aria-label="Your next steps">
+          <li>
+            <span>1</span> Pick your area
+          </li>
+          <li>
+            <span>2</span> Tell us your priorities
+          </li>
+          <li>
+            <span>3</span> See your options
+          </li>
+        </ol>
       </div>
       <div className="appearance-position">
         <AppearanceMenu />
@@ -233,17 +243,6 @@ export function Explorer() {
                   Explore history
                   <ArrowRight />
                 </Button>
-                <Button
-                  variant="ghost"
-                  className="mt-1 w-full justify-between"
-                  onClick={() => open('farm')}
-                >
-                  <span className="flex items-center gap-2">
-                    <Leaf size={15} />
-                    Think about your rotation
-                  </span>
-                  <ChevronRight />
-                </Button>
               </>
             )}
           </>
@@ -277,6 +276,15 @@ export function Explorer() {
           Area details
         </Button>
       )}
+      {!state.details && catalog.error && (
+        <div className="map-notice">
+          <StatusMessage error={catalog.error} retry={catalog.refetch} />
+        </div>
+      )}
+      <p className="decision-note">
+        This tool supports your decisions. It does not replace your own experience or local
+        agricultural advisers.
+      </p>
       <div className="map-footer">
         <span>Context map · FAO GAEZ</span>
         <Link href={infoLink('/sources')} className="flex items-center gap-1">

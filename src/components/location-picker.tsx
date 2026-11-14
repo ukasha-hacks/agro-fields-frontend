@@ -26,22 +26,34 @@ export function LocationPicker({
       <PopoverContent className="w-80">
         <p className="mb-3 text-xs text-muted">Four sample areas in Uganda</p>
         <div className="space-y-1">
-          {locations.map((location) => (
-            <button
-              className="location-option"
-              key={location.location_id}
-              onClick={() => {
-                onSelect(location.location_id);
-                setOpen(false);
-              }}
-            >
-              <div>
-                <span className="block font-medium">{location.name}</span>
-                <span className="text-xs text-muted">{location.region} · 2016–2025</span>
-              </div>
-              {selected?.location_id === location.location_id && <Check size={17} />}
-            </button>
+          {['Central', 'Eastern', 'Northern', 'Western'].map((region) => (
+            <section key={region} className="location-group" aria-label={`${region} Uganda`}>
+              <h3 className="location-region">{region} Uganda</h3>
+              {locations
+                .filter((location) => location.region === region)
+                .map((location) => (
+                  <button
+                    className="location-option"
+                    key={location.location_id}
+                    onClick={() => {
+                      onSelect(location.location_id);
+                      setOpen(false);
+                    }}
+                  >
+                    <div>
+                      <span className="block font-medium">{location.name}</span>
+                      <span className="text-xs text-muted">Sample point · 2016–2025</span>
+                    </div>
+                    {selected?.location_id === location.location_id && <Check size={17} />}
+                  </button>
+                ))}
+            </section>
           ))}
+          {!locations.length && (
+            <p className="text-sm text-muted">
+              The area list is not available yet. Check the archive message on the map.
+            </p>
+          )}
         </div>
         <p className="mt-3 text-xs leading-relaxed text-muted">
           These are sample points, not district averages.
