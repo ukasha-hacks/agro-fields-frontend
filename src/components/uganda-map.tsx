@@ -1,0 +1,252 @@
+'use client';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { LocateFixed, Minus, Plus } from 'lucide-react';
+import { countryPath, project, clampZoom, type Country } from '@/lib/map-geometry';
+import type { Location } from '@/lib/api';
+import { Button } from './ui/button';
+import { HelpTip } from './help-tip';
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
+
+export function UgandaMap({
+  locations,
+  selected,
+  onSelect,
+}: {
+  locations: Location[];
+  selected?: Location;
+  onSelect: (id: string) => void;
+}) {
+  const svg = useRef<SVGSVGElement>(null);
+  const drag = useRef<{
+    x: number;
+    y: number;
+    originX: number;
+    originY: number;
+    moved: boolean;
+  } | null>(null);
+  const [countries, setCountries] = useState<Country[]>([]);
+  const [error, setError] = useState(false);
+  const [view, setView] = useState({ zoom: 1, x: 0, y: 0 });
+  const reset = () => setView({ zoom: 1, x: 0, y: 0 });
+  const shapes = useMemo(
+    () => countries.map((country) => ({ country, path: countryPath(country) })),
+    [countries],
+  );
+  useEffect(() => {
+    let active = true;
+    fetch('/maps/country-context.geojson')
+      .then((r) => {
+        if (!r.ok) throw Error();
+        return r.json();
+      })
+      .then((j) => {
+        if (active) setCountries(j.features);
+      })
+      .catch(() => {
+        if (active) setError(true);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+  function zoomBy(factor: number, px = 550, py = 500) {
+    setView((old) => {
+      const zoom = clampZoom(old.zoom * factor);
+      const ratio = zoom / old.zoom;
+      return { zoom, x: px - (px - old.x) * ratio, y: py - (py - old.y) * ratio };
+    });
+  }
+  useEffect(() => {
+    const element = svg.current;
+    if (!element) return;
+    const onWheel = (event: WheelEvent) => {
+      event.preventDefault();
+      const point = element.createSVGPoint();
+      point.x = event.clientX;
+      point.y = event.clientY;
+      const local = point.matrixTransform(element.getScreenCTM()!.inverse());
+      zoomBy(Math.exp(-event.deltaY * 0.0015), local.x, local.y);
+    };
+    element.addEventListener('wheel', onWheel, { passive: false });
+    return () => element.removeEventListener('wheel', onWheel);
+  }, []);
+  const labels = [
+    { name: 'SOUTH SUDAN', lon: 31.8, lat: 4.9 },
+    { name: 'KENYA', lon: 35.6, lat: 1.6 },
+    { name: 'D. R. CONGO', lon: 28.9, lat: 1.2 },
+    { name: 'TANZANIA', lon: 32.5, lat: -1.9 },
+    { name: 'RWANDA', lon: 29.7, lat: -1.9 },
+  ];
+  return (
+    <div className="map-stage">
+      <svg
+        ref={svg}
+        viewBox="0 0 1100 1000"
+        className="country-map"
+        aria-label="Interactive map of Uganda and four sample locations"
+        role="group"
+        tabIndex={0}
+        onKeyDown={(e) => {
+          if (['+', '='].includes(e.key)) zoomBy(1.2);
+          if (e.key === '-') zoomBy(1 / 1.2);
+          if (e.key === '0' || e.key === 'Home') reset();
+          const moves: Record<string, [number, number]> = {
+            ArrowLeft: [40, 0],
+            ArrowRight: [-40, 0],
+            ArrowUp: [0, 40],
+            ArrowDown: [0, -40],
+          };
+          if (moves[e.key] && e.target === svg.current) {
+            e.preventDefault();
+            setView((v) => ({ ...v, x: v.x + moves[e.key][0], y: v.y + moves[e.key][1] }));
+          }
+        }}
+        onPointerDown={(e) => {
+          if ((e.target as Element).closest('[data-map-marker]')) return;
+          drag.current = {
+            x: e.clientX,
+            y: e.clientY,
+            originX: view.x,
+            originY: view.y,
+            moved: false,
+          };
+          e.currentTarget.setPointerCapture(e.pointerId);
+        }}
+        onPointerMove={(e) => {
+          if (!drag.current || !svg.current) return;
+          const matrix = svg.current.getScreenCTM();
+          if (!matrix) return;
+          const dx = (e.clientX - drag.current.x) / matrix.a;
+          const dy = (e.clientY - drag.current.y) / matrix.d;
+          if (Math.abs(dx) + Math.abs(dy) > 3) drag.current.moved = true;
+          setView((v) => ({ ...v, x: drag.current!.originX + dx, y: drag.current!.originY + dy }));
+        }}
+        onPointerUp={(e) => {
+          drag.current = null;
+          if (e.currentTarget.hasPointerCapture(e.pointerId))
+            e.currentTarget.releasePointerCapture(e.pointerId);
+        }}
+        onPointerCancel={() => {
+          drag.current = null;
+        }}
+      >
+        <defs>
+          <linearGradient id="uganda-fill" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="var(--map-uganda-light)" />
+            <stop offset="100%" stopColor="var(--map-uganda)" />
+          </linearGradient>
+        </defs>
+        <g transform={`translate(${view.x},${view.y}) scale(${view.zoom})`}>
+          {shapes
+            .filter(({ country }) => country.properties.ISO3CD !== 'UGA')
+            .map(({ country, path }) => (
+              <path
+                key={country.properties.ISO3CD}
+                d={path}
+                className="neighbor-shape"
+                fillRule="evenodd"
+              />
+            ))}
+          {shapes
+            .filter(({ country }) => country.properties.ISO3CD === 'UGA')
+            .map(({ path }) => (
+              <path
+                key="UGA"
+                d={path}
+                className="uganda-shape"
+                fill="url(#uganda-fill)"
+                fillRule="evenodd"
+              />
+            ))}
+          {labels.map((label) => (
+            <text
+              key={label.name}
+              x={project(label.lon, label.lat)[0]}
+              y={project(label.lon, label.lat)[1]}
+              textAnchor="middle"
+              className="neighbor-label"
+            >
+              {label.name}
+            </text>
+          ))}
+          <text
+            x={project(32.3, 1.6)[0]}
+            y={project(32.3, 1.6)[1]}
+            textAnchor="middle"
+            className="uganda-label"
+          >
+            UGANDA
+          </text>
+          {locations.map((location) => {
+            const [x, y] = project(location.longitude, location.latitude);
+            const active = location.location_id === selected?.location_id;
+            return (
+              <g
+                key={location.location_id}
+                transform={`translate(${x},${y}) scale(${1 / view.zoom})`}
+                data-map-marker="true"
+              >
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <g
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Select ${location.name}`}
+                      aria-pressed={active}
+                      className={`map-marker ${active ? 'active' : ''}`}
+                      onClick={() => onSelect(location.location_id)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          onSelect(location.location_id);
+                          e.currentTarget.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+                        }
+                      }}
+                    >
+                      <circle r={active ? 20 : 13} className="marker-outer" />
+                      <circle r={active ? 6 : 4} className="marker-inner" />
+                      <text x={27} y={5} className="marker-label">
+                        {location.name.replace(' vicinity', '')}
+                      </text>
+                    </g>
+                  </PopoverTrigger>
+                  <PopoverContent className="map-popover w-72">
+                    <p className="font-semibold">{location.name}</p>
+                    <p className="mt-1 text-sm text-muted">{location.region} Uganda</p>
+                    <p className="mt-3 text-sm">Historical data: 2016–2025</p>
+                    <p className="mt-1 text-xs text-muted">
+                      One gridded sample point. It does not represent every farm in this area.
+                    </p>
+                  </PopoverContent>
+                </Popover>
+              </g>
+            );
+          })}
+        </g>
+      </svg>
+      {error && (
+        <p className="map-error" role="alert">
+          The map outline could not load. You can still choose an area from the list.
+        </p>
+      )}
+      <div className="map-controls">
+        <div className="zoom-group">
+          <Button variant="ghost" size="icon" aria-label="Zoom in" onClick={() => zoomBy(1.25)}>
+            <Plus />
+          </Button>
+          <Button variant="ghost" size="icon" aria-label="Zoom out" onClick={() => zoomBy(0.8)}>
+            <Minus />
+          </Button>
+        </div>
+        <Button variant="secondary" className="reset-map" onClick={reset}>
+          <LocateFixed />
+          Reset map
+        </Button>
+        <HelpTip label="Move around the map">
+          Scroll to zoom. Drag to move. Use Reset map to bring Uganda back. Keyboard: +, −, arrow
+          keys, and Home.
+        </HelpTip>
+      </div>
+    </div>
+  );
+}
