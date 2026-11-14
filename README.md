@@ -44,4 +44,6 @@ npm run build
 
 The backend has four gridded sample points, not district averages or farm measurements. It covers 2016–2025. Wetness is not soil fertility. Rotation rules still need agricultural review; an insufficient-evidence result must remain visible.
 
-Data and map references will be documented in docs/DATA_SOURCES.md as the map stage is implemented. No new agricultural dataset will be added outside the challenge resource chain. Package documentation and fonts are implementation resources.
+This branch implements the full-screen map workspace, history overlays, source page, FAQ and guide. The farmer form and assessment follow on stage/03-farmer-workflow. There is no home hero section or top navigation header. Data and map references are documented in [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md). No new agricultural dataset will be added outside the challenge resource chain. Package documentation and fonts are implementation resources.
+
+Stage 2 verification: TypeScript, 21 automated checks and the production build pass. The final branch contains the full farmer workflow.

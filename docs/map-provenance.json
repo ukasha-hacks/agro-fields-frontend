@@ -1,0 +1,19 @@
+{
+  "challenge_resource": "https://www.spaceappschallenge.org/2026/challenges/adapting-farms-with-nasa-data/?tab=resources",
+  "resource": "FAO GAEZ",
+  "discovery": "https://gaez.fao.org/",
+  "web_map": "https://www.arcgis.com/sharing/rest/content/items/af5a56e3092242cfa543faab7e3f5ed9/data?f=json",
+  "layer": "https://services5.arcgis.com/sjP4Ugu5s0dZWLjd/arcgis/rest/services/GAEZ_Country_Status/FeatureServer/0",
+  "download_url": "https://services5.arcgis.com/sjP4Ugu5s0dZWLjd/arcgis/rest/services/GAEZ_Country_Status/FeatureServer/0/query?f=geojson&where=ISO3CD+IN+%28%27UGA%27%2C%27KEN%27%2C%27TZA%27%2C%27RWA%27%2C%27COD%27%2C%27SSD%27%2C%27BDI%27%29&outFields=ISO3CD%2CROMNAM&outSR=4326&maxAllowableOffset=0.015&geometryPrecision=4",
+  "retrieved_at": "2026-11-14T19:17:18.341853+00:00",
+  "sha256": "71483dc5125c1e15d27270511804363ea4b379f1231a4e2c1ac3c1da80bd8e1c",
+  "item": {
+    "id": "07c0a47c1db54498aee03558b03769c4",
+    "title": "GAEZ Country Status",
+    "owner": "dmarsh@esri.com",
+    "accessInformation": null,
+    "licenseInfo": null,
+    "description": null
+  },
+  "processing": "Provider-side simplification 0.015 degrees, geometry precision 4 decimals; context only, no district or farm boundaries."
+}

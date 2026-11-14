@@ -11,14 +11,22 @@ export type MapLayer = components['schemas']['MapLayer'];
 export type Category = ExploreRequest['categories'][number];
 
 export class ApiError extends Error {
-  constructor(message: string, public status = 0) { super(message); this.name = 'ApiError'; }
+  constructor(
+    message: string,
+    public status = 0,
+  ) {
+    super(message);
+    this.name = 'ApiError';
+  }
 }
 
 // Cache only successful, read-only responses. No browser storage or cached PDF blobs.
 const cache = new Map<string, { until: number; value: unknown }>();
 const TTL = 5 * 60 * 1000;
 const MAX_ITEMS = 20;
-export function clearApiCache() { cache.clear(); }
+export function clearApiCache() {
+  cache.clear();
+}
 export async function api<T>(path: string, body?: unknown): Promise<T> {
   const key = path + JSON.stringify(body ?? null);
   const hit = cache.get(key);
@@ -28,10 +36,15 @@ export async function api<T>(path: string, body?: unknown): Promise<T> {
     headers: body === undefined ? undefined : { 'Content-Type': 'application/json' },
     body: body === undefined ? undefined : JSON.stringify(body),
     signal: AbortSignal.timeout(25000),
-  }).catch(() => { throw new ApiError('We could not reach the data service. Please try again.'); });
+  }).catch(() => {
+    throw new ApiError('We could not reach the data service. Please try again.');
+  });
   if (!response.ok) {
     const result = await response.json().catch(() => null);
-    throw new ApiError(result?.error?.message ?? 'The request could not be completed. Please try again.', response.status);
+    throw new ApiError(
+      result?.error?.message ?? 'The request could not be completed. Please try again.',
+      response.status,
+    );
   }
   const value = await response.json();
   if (cache.size >= MAX_ITEMS) cache.delete(cache.keys().next().value!);
@@ -40,17 +53,24 @@ export async function api<T>(path: string, body?: unknown): Promise<T> {
 }
 export async function downloadReport(exploration: ExploreRequest, rotation?: RotationRequest) {
   const response = await fetch('/api/backend/exports/pdf', {
-    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ exploration, ...(rotation ? { rotation } : {}) }),
     signal: AbortSignal.timeout(60000),
   });
   if (!response.ok) {
     const error = await response.json().catch(() => null);
-    throw new ApiError(error?.error?.message ?? 'We could not make the report. Please try again.', response.status);
+    throw new ApiError(
+      error?.error?.message ?? 'We could not make the report. Please try again.',
+      response.status,
+    );
   }
-  if (!response.headers.get('content-type')?.includes('application/pdf')) throw new ApiError('The report response was not a PDF.');
+  if (!response.headers.get('content-type')?.includes('application/pdf'))
+    throw new ApiError('The report response was not a PDF.');
   const url = URL.createObjectURL(await response.blob());
   const link = document.createElement('a');
-  link.href = url; link.download = `agro-field-${exploration.location_id}-${exploration.start_date}.pdf`;
-  link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+  link.href = url;
+  link.download = `agro-field-${exploration.location_id}-${exploration.start_date}.pdf`;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
 }

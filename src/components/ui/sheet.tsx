@@ -1,0 +1,45 @@
+'use client';
+import * as Dialog from '@radix-ui/react-dialog';
+import { X } from 'lucide-react';
+import { Button } from './button';
+export function Sheet({
+  open,
+  onOpenChange,
+  title,
+  description,
+  children,
+}: {
+  open: boolean;
+  onOpenChange: (value: boolean) => void;
+  title: string;
+  description: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <Dialog.Root modal={false} open={open} onOpenChange={onOpenChange}>
+      <Dialog.Portal>
+        <Dialog.Content
+          className="sheet-content"
+          aria-describedby="sheet-description"
+          onInteractOutside={(event) => event.preventDefault()}
+        >
+          <div className="sheet-heading">
+            <div>
+              <p className="eyebrow">Agro Field</p>
+              <Dialog.Title className="text-3xl tracking-tight">{title}</Dialog.Title>
+              <Dialog.Description id="sheet-description" className="mt-2 text-sm text-muted">
+                {description}
+              </Dialog.Description>
+            </div>
+            <Dialog.Close asChild>
+              <Button variant="secondary" size="icon" aria-label="Close panel">
+                <X />
+              </Button>
+            </Dialog.Close>
+          </div>
+          <div className="sheet-body">{children}</div>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
+  );
+}
