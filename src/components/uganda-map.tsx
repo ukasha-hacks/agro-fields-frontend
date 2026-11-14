@@ -1,11 +1,12 @@
 'use client';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { LocateFixed, Minus, Plus } from 'lucide-react';
-import { countryPath, project, clampZoom, type Country } from '@/lib/map-geometry';
+import { countryPath, project, clampZoom, mapNeedsReset, type Country } from '@/lib/map-geometry';
 import type { Location } from '@/lib/api';
 import { Button } from './ui/button';
 import { HelpTip } from './help-tip';
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
+import { ContentSkeleton } from './ui/skeleton';
 
 export function UgandaMap({
   locations,
@@ -23,10 +24,12 @@ export function UgandaMap({
     originX: number;
     originY: number;
     moved: boolean;
+    pointerId: number;
   } | null>(null);
   const [countries, setCountries] = useState<Country[]>([]);
   const [error, setError] = useState(false);
   const [view, setView] = useState({ zoom: 1, x: 0, y: 0 });
+  const [frame, setFrame] = useState({ x: 0, y: 0, width: 1100, height: 1000 });
   const reset = () => setView({ zoom: 1, x: 0, y: 0 });
   const shapes = useMemo(
     () => countries.map((country) => ({ country, path: countryPath(country) })),
@@ -59,16 +62,33 @@ export function UgandaMap({
   useEffect(() => {
     const element = svg.current;
     if (!element) return;
+    const resize = new ResizeObserver(() => {
+      const matrix = element.getScreenCTM();
+      if (!matrix) return;
+      const rect = element.getBoundingClientRect();
+      setFrame({
+        x: (rect.left - matrix.e) / matrix.a,
+        y: (rect.top - matrix.f) / matrix.d,
+        width: rect.width / matrix.a,
+        height: rect.height / matrix.d,
+      });
+    });
+    resize.observe(element);
     const onWheel = (event: WheelEvent) => {
       event.preventDefault();
       const point = element.createSVGPoint();
       point.x = event.clientX;
       point.y = event.clientY;
-      const local = point.matrixTransform(element.getScreenCTM()!.inverse());
+      const matrix = element.getScreenCTM();
+      if (!matrix) return;
+      const local = point.matrixTransform(matrix.inverse());
       zoomBy(Math.exp(-event.deltaY * 0.0015), local.x, local.y);
     };
     element.addEventListener('wheel', onWheel, { passive: false });
-    return () => element.removeEventListener('wheel', onWheel);
+    return () => {
+      resize.disconnect();
+      element.removeEventListener('wheel', onWheel);
+    };
   }, []);
   const labels = [
     { name: 'SOUTH SUDAN', lon: 31.8, lat: 4.9 },
@@ -102,6 +122,7 @@ export function UgandaMap({
           }
         }}
         onPointerDown={(e) => {
+          if (!e.isPrimary || e.button !== 0) return;
           if ((e.target as Element).closest('[data-map-marker]')) return;
           drag.current = {
             x: e.clientX,
@@ -109,24 +130,32 @@ export function UgandaMap({
             originX: view.x,
             originY: view.y,
             moved: false,
+            pointerId: e.pointerId,
           };
           e.currentTarget.setPointerCapture(e.pointerId);
         }}
         onPointerMove={(e) => {
-          if (!drag.current || !svg.current) return;
+          const start = drag.current;
+          if (!start || start.pointerId !== e.pointerId || !svg.current) return;
           const matrix = svg.current.getScreenCTM();
           if (!matrix) return;
-          const dx = (e.clientX - drag.current.x) / matrix.a;
-          const dy = (e.clientY - drag.current.y) / matrix.d;
-          if (Math.abs(dx) + Math.abs(dy) > 3) drag.current.moved = true;
-          setView((v) => ({ ...v, x: drag.current!.originX + dx, y: drag.current!.originY + dy }));
+          const dx = (e.clientX - start.x) / matrix.a;
+          const dy = (e.clientY - start.y) / matrix.d;
+          if (Math.abs(dx) + Math.abs(dy) > 3) start.moved = true;
+          // Pointer release may clear the ref before React runs this update.
+          const x = start.originX + dx;
+          const y = start.originY + dy;
+          setView((v) => ({ ...v, x, y }));
         }}
         onPointerUp={(e) => {
-          drag.current = null;
+          if (drag.current?.pointerId === e.pointerId) drag.current = null;
           if (e.currentTarget.hasPointerCapture(e.pointerId))
             e.currentTarget.releasePointerCapture(e.pointerId);
         }}
         onPointerCancel={() => {
+          drag.current = null;
+        }}
+        onLostPointerCapture={() => {
           drag.current = null;
         }}
       >
@@ -224,6 +253,11 @@ export function UgandaMap({
           })}
         </g>
       </svg>
+      {!countries.length && !error && (
+        <div className="map-loading">
+          <ContentSkeleton kind="map" label="Loading the map outline" />
+        </div>
+      )}
       {error && (
         <p className="map-error" role="alert">
           The map outline could not load. You can still choose an area from the list.
@@ -238,10 +272,18 @@ export function UgandaMap({
             <Minus />
           </Button>
         </div>
-        <Button variant="secondary" className="reset-map" onClick={reset}>
-          <LocateFixed />
-          Reset map
-        </Button>
+        {mapNeedsReset(view, frame) && (
+          <Button
+            variant="secondary"
+            className="reset-map"
+            onClick={reset}
+            aria-label="Reset map"
+            title="Bring Uganda back into view"
+          >
+            <LocateFixed />
+            <span>Reset map</span>
+          </Button>
+        )}
         <HelpTip label="Move around the map">
           Scroll to zoom. Drag to move. Use Reset map to bring Uganda back. Keyboard: +, −, arrow
           keys, and Home.

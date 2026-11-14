@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Download, Pause, Play } from 'lucide-react';
+import { Download, LoaderCircle, Pause, Play } from 'lucide-react';
 import { useReducedMotion } from 'motion/react';
 import { useQueryStates } from 'nuqs';
 import { urlParsers, toExplore } from '@/lib/url-state';
@@ -187,7 +187,7 @@ export function HistoryPanel({ locations }: { locations: Location[] }) {
           </div>
         </div>
       </form>
-      <StatusMessage loading={loading} error={error} retry={refetch} />
+      <StatusMessage loading={loading} error={error} retry={refetch} kind="history" />
       {data && (
         <>
           <section className="summary-strip">
@@ -327,7 +327,7 @@ export function HistoryPanel({ locations }: { locations: Location[] }) {
           </details>
           <div className="flex flex-wrap gap-3">
             <Button onClick={exportPdf} disabled={exporting}>
-              <Download />
+              {exporting ? <LoaderCircle className="animate-spin" /> : <Download />}
               {exporting ? 'Making PDF…' : 'Download PDF'}
             </Button>
             <Button

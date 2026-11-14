@@ -1,21 +1,18 @@
-import { AlertCircle, LoaderCircle } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 import { Button } from './ui/button';
+import { ContentSkeleton } from './ui/skeleton';
 export function StatusMessage({
   loading,
   error,
   retry,
+  kind = 'summary',
 }: {
   loading?: boolean;
   error?: string;
   retry?: () => void;
+  kind?: 'summary' | 'history' | 'form' | 'assessment' | 'sources';
 }) {
-  if (loading)
-    return (
-      <div className="status-message" role="status">
-        <LoaderCircle className="animate-spin" size={18} />
-        <span>Reading the local archive…</span>
-      </div>
-    );
+  if (loading) return <ContentSkeleton kind={kind} />;
   if (error)
     return (
       <div className="status-message error" role="alert">

@@ -4,10 +4,10 @@ A small Next.js and TypeScript frontend for the Agro Field FastAPI backend. Sour
 
 ## Current stage
 
-Use `stage/03-farmer-workflow` for the full implementation. Main is a branch guide until the stages are merged.
+Use `stage/04-map-usability` for the full implementation. Main is a branch guide until the stages are merged.
 
 ```bash
-git clone --branch stage/03-farmer-workflow https://github.com/ukasha-hacks/agro-fields-frontend.git
+git clone --branch stage/04-map-usability https://github.com/ukasha-hacks/agro-fields-frontend.git
 cd agro-fields-frontend
 ```
 
@@ -35,11 +35,12 @@ Successful API results have a bounded five-minute memory cache. Catalog GET requ
 
 ## Stages
 
-| Branch                   | Scope                                                       |
-| ------------------------ | ----------------------------------------------------------- |
-| stage/01-foundation      | App setup, state, validation, API proxy and generated types |
-| stage/02-map-explorer    | Uganda map, historical charts and replay                    |
-| stage/03-farmer-workflow | Farmer form, assessment, PDF, help and checks               |
+| Branch                   | Scope                                                         |
+| ------------------------ | ------------------------------------------------------------- |
+| stage/01-foundation      | App setup, state, validation, API proxy and generated types   |
+| stage/02-map-explorer    | Uganda map, historical charts and replay                      |
+| stage/03-farmer-workflow | Farmer form, assessment, PDF, help and checks                 |
+| stage/04-map-usability   | Drag fix, conditional reset, clear flow, skeletons and errors |
 
 Each branch contains earlier work. README and DEVELOPMENT.md record the stage and checks.
 
@@ -70,7 +71,7 @@ npm test
 npm run build
 ```
 
-21 automated checks cover dates, draft validation, real zero versus unknown soil values, URL round trips, map source integrity and bounded caching. TypeScript and the production build pass. To repeat the live integration check with the local backend and its existing virtual environment:
+22 automated checks cover dates, draft validation, real zero versus unknown soil values, URL round trips, map source integrity and bounded caching. TypeScript and the production build pass. To repeat the live integration check with the local backend and its existing virtual environment:
 
 ```bash
 node scripts/smoke.mjs ../agro-field-backend

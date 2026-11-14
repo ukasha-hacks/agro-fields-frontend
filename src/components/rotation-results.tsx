@@ -1,7 +1,15 @@
 'use client';
 import { useState } from 'react';
 import { useQueryStates } from 'nuqs';
-import { ArrowLeft, ArrowRight, Check, CircleHelp, Download, TriangleAlert } from 'lucide-react';
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  CircleHelp,
+  Download,
+  LoaderCircle,
+  TriangleAlert,
+} from 'lucide-react';
 import { urlParsers, toExplore } from '@/lib/url-state';
 import { exploreSchema } from '@/lib/validation';
 import {
@@ -60,7 +68,12 @@ export function RotationResults({ locations }: { locations: Location[] }) {
     );
   return (
     <div className="space-y-6">
-      <StatusMessage loading={result.loading} error={result.error} retry={result.refetch} />
+      <StatusMessage
+        loading={result.loading}
+        error={result.error}
+        retry={result.refetch}
+        kind="assessment"
+      />
       {result.data && (
         <>
           <section className="assessment-banner">
@@ -261,7 +274,7 @@ export function RotationResults({ locations }: { locations: Location[] }) {
           </details>
           <div className="flex flex-wrap gap-3">
             <Button onClick={exportPdf} disabled={exporting}>
-              <Download />
+              {exporting ? <LoaderCircle className="animate-spin" /> : <Download />}
               {exporting ? 'Making PDF…' : 'Download full report'}
             </Button>
             <Button

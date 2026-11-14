@@ -25,6 +25,9 @@ export function useApi<T>(path: string, body?: unknown, enabled = true) {
     data: enabled && state.key === key ? state.data : undefined,
     error: enabled && state.key === key ? state.error : undefined,
     loading: enabled && (state.key !== key || (!state.data && !state.error)),
-    refetch: () => setRetry((v) => v + 1),
+    refetch: () => {
+      setState({ key: '' });
+      setRetry((v) => v + 1);
+    },
   };
 }

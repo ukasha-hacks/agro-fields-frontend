@@ -28,7 +28,7 @@ export function SourceContent() {
           listed FAO GAEZ portal.
         </p>
       </section>
-      <StatusMessage loading={metadata.loading} error={metadata.error} retry={metadata.refetch} />
+      <StatusMessage loading={metadata.loading} error={metadata.error} retry={metadata.refetch} kind="sources" />
       {metadata.data && (
         <section>
           <h2>Data behind this view</h2>
