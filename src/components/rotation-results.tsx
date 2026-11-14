@@ -147,6 +147,47 @@ export function RotationResults({ locations }: { locations: Location[] }) {
               ))}
             </div>
           </section>
+          <section className="insight-block">
+            <h3 className="font-medium">Evidence for this plan</h3>
+            <p>
+              Local suitability is not established. The observations describe the selected past
+              period; reviewed crop and season rules are still needed before we can rank rotations
+              or give a confidence score.
+            </p>
+            <p className="text-xs text-muted">
+              {result.data.priority === 'income'
+                ? 'For your income priority, local prices, costs and likely yields are missing.'
+                : result.data.priority === 'conserve_water'
+                  ? 'For your water priority, compare rainfall with your water supply. Crop water needs and irrigation efficiency are still missing.'
+                  : result.data.priority === 'improve_soil'
+                    ? 'For your soil priority, a wetness index gives water context. Soil nutrients, local soil results and reviewed soil-benefit rules are still needed.'
+                    : result.data.priority === 'reduce_pests'
+                      ? 'For your pest priority, local pest records and crop-break rules are still missing.'
+                      : 'Your crop preferences help describe the choices. They do not establish which plan will perform best.'}
+            </p>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {result.data.environmental_context.panels.map((panel) => (
+                <Button
+                  key={panel.category}
+                  variant="secondary"
+                  size="small"
+                  onClick={() =>
+                    void setState(
+                      {
+                        view: 'history',
+                        topics: [panel.category],
+                        focus: panel.category,
+                        cursor: -1,
+                      },
+                      { history: 'push' },
+                    )
+                  }
+                >
+                  Open {panel.category === 'soil_wetness' ? 'wetness' : panel.category} evidence
+                </Button>
+              ))}
+            </div>
+          </section>
           <section>
             <div className="flex items-center gap-2">
               <h3 className="font-medium">What we could check</h3>
@@ -200,6 +241,10 @@ export function RotationResults({ locations }: { locations: Location[] }) {
               {result.data.alternatives.map((alternative, index) => (
                 <div className="alternative-card" key={alternative.strategy_id}>
                   <p className="eyebrow">Option {index + 1} · For review</p>
+                  <p className="mt-2 text-xs text-muted">
+                    Local suitability still needs review. No calibrated confidence score is
+                    available.
+                  </p>
                   <p className="mt-3 font-medium">
                     {alternative.sequence.map((s) => s.crops.join(' + ') || 'Fallow').join(' → ')}
                   </p>
@@ -232,6 +277,7 @@ export function RotationResults({ locations }: { locations: Location[] }) {
               {result.data.unfilled_alternative_slots.map((slot, index) => (
                 <div key={slot.strategy_id} className="alternative-card empty">
                   <p className="eyebrow">Option {result.data!.alternatives.length + index + 1}</p>
+                  <p className="mt-2 text-xs text-muted">Local suitability: unknown</p>
                   <p className="mt-4 text-sm">{plainReason(slot.reason)}</p>
                   <span className="mt-4 block text-xs text-muted">
                     Waiting for supporting evidence

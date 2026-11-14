@@ -4,10 +4,10 @@ A small Next.js and TypeScript frontend for the Agro Field FastAPI backend. Sour
 
 ## Current stage
 
-Use `stage/04-map-usability` for the full implementation. Main is a branch guide until the stages are merged.
+Use `stage/05-evidence-and-guidance` for the full implementation. Main is a branch guide until the stages are merged.
 
 ```bash
-git clone --branch stage/04-map-usability https://github.com/ukasha-hacks/agro-fields-frontend.git
+git clone --branch stage/05-evidence-and-guidance https://github.com/ukasha-hacks/agro-fields-frontend.git
 cd agro-fields-frontend
 ```
 
@@ -35,12 +35,13 @@ Successful API results have a bounded five-minute memory cache. Catalog GET requ
 
 ## Stages
 
-| Branch                   | Scope                                                         |
-| ------------------------ | ------------------------------------------------------------- |
-| stage/01-foundation      | App setup, state, validation, API proxy and generated types   |
-| stage/02-map-explorer    | Uganda map, historical charts and replay                      |
-| stage/03-farmer-workflow | Farmer form, assessment, PDF, help and checks                 |
-| stage/04-map-usability   | Drag fix, conditional reset, clear flow, skeletons and errors |
+| Branch                         | Scope                                                         |
+| ------------------------------ | ------------------------------------------------------------- |
+| stage/01-foundation            | App setup, state, validation, API proxy and generated types   |
+| stage/02-map-explorer          | Uganda map, historical charts and replay                      |
+| stage/03-farmer-workflow       | Farmer form, assessment, PDF, help and checks                 |
+| stage/04-map-usability         | Drag fix, conditional reset, clear flow, skeletons and errors |
+| stage/05-evidence-and-guidance | Complete summaries, seasonal evidence, methods and help       |
 
 Each branch contains earlier work. README and DEVELOPMENT.md record the stage and checks.
 
@@ -51,7 +52,7 @@ Each branch contains earlier work. README and DEVELOPMENT.md record the stage an
 - Add past crops, water availability, priorities and a three-season plan. Soil values and planned dates are optional. Unknown values remain unknown.
 - Review the baseline checks and missing evidence. The default backend has no reviewed rotation rules, so it does not invent alternatives.
 - Download a historical or combined PDF. The backend recomputes it using the same request.
-- Open How it works, Common questions, or Data and sources from the floating menu. Context is kept in the return link.
+- Open How it works, Common questions, How we read the data, or Data and sources from the floating menu. Context is kept in the return link.
 
 The backend address is configured once in `BACKEND_URL`. The browser uses these same-origin proxy endpoints:
 
@@ -71,7 +72,7 @@ npm test
 npm run build
 ```
 
-22 automated checks cover dates, draft validation, real zero versus unknown soil values, URL round trips, map source integrity and bounded caching. TypeScript and the production build pass. To repeat the live integration check with the local backend and its existing virtual environment:
+26 automated checks cover dates, draft validation, real zero versus unknown soil values, URL round trips, map source integrity, the reset threshold, seasonal completeness and bounded caching. TypeScript and the production build pass. To repeat the live integration check with the local backend and its existing virtual environment:
 
 ```bash
 node scripts/smoke.mjs ../agro-field-backend
@@ -90,3 +91,5 @@ The map and historical explorer are implemented on stage 2. Data and map referen
 ## Interface review
 
 [Map workspace](docs/screenshots/map.jpg) · [Chart overlay](docs/screenshots/charts.jpg)
+
+The focused follow-up and deferred requests are recorded in [docs/SCOPE_REVIEW.md](docs/SCOPE_REVIEW.md). The seasonal history section uses the full archive only when expanded. It is labelled separately from the selected-period analysis and PDF.

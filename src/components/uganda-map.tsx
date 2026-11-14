@@ -28,6 +28,7 @@ export function UgandaMap({
   } | null>(null);
   const [countries, setCountries] = useState<Country[]>([]);
   const [error, setError] = useState(false);
+  const [retry, setRetry] = useState(0);
   const [view, setView] = useState({ zoom: 1, x: 0, y: 0 });
   const [frame, setFrame] = useState({ x: 0, y: 0, width: 1100, height: 1000 });
   const reset = () => setView({ zoom: 1, x: 0, y: 0 });
@@ -37,6 +38,7 @@ export function UgandaMap({
   );
   useEffect(() => {
     let active = true;
+    setError(false);
     fetch('/maps/country-context.geojson')
       .then((r) => {
         if (!r.ok) throw Error();
@@ -51,7 +53,7 @@ export function UgandaMap({
     return () => {
       active = false;
     };
-  }, []);
+  }, [retry]);
   function zoomBy(factor: number, px = 550, py = 500) {
     setView((old) => {
       const zoom = clampZoom(old.zoom * factor);
@@ -232,6 +234,7 @@ export function UgandaMap({
                         }
                       }}
                     >
+                      <circle r={24} fill="transparent" />
                       <circle r={active ? 20 : 13} className="marker-outer" />
                       <circle r={active ? 6 : 4} className="marker-inner" />
                       <text x={27} y={5} className="marker-label">
@@ -259,9 +262,17 @@ export function UgandaMap({
         </div>
       )}
       {error && (
-        <p className="map-error" role="alert">
-          The map outline could not load. You can still choose an area from the list.
-        </p>
+        <div className="map-error" role="alert">
+          <p>The map outline could not load. You can still choose an area from the list.</p>
+          <Button
+            variant="secondary"
+            size="small"
+            className="mt-3"
+            onClick={() => setRetry((value) => value + 1)}
+          >
+            Retry map
+          </Button>
+        </div>
       )}
       <div className="map-controls">
         <div className="zoom-group">

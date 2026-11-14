@@ -16,7 +16,7 @@ import {
 import type { Panel } from '@/lib/api';
 import { formatValue } from '@/lib/utils';
 import { HelpTip } from './help-tip';
-const colors = ['#6fa480', '#55a9de', '#d8a44b'];
+const colors = ['var(--chart-green)', 'var(--chart-blue)', 'var(--chart-amber)'];
 export function HistoryChart({
   panel,
   type,
@@ -54,7 +54,7 @@ export function HistoryChart({
         ? 'Monthly values add the selected days of rain. Daily values are daily rainfall. A missing observation stays empty; it is not zero.'
         : 'Monthly values show mean air temperature over the selected days. Values come from a gridded historical dataset, not a thermometer on the farm.';
   return (
-    <section className="history-chart">
+    <section className="history-chart" id={`evidence-${panel.category}`}>
       <div className="flex items-center gap-2">
         <h3 className="font-medium">{panel.title}</h3>
         <HelpTip label={panel.title}>{help}</HelpTip>
