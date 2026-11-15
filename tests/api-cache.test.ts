@@ -28,12 +28,15 @@ it('uses different keys for different selections', async () => {
   await api('explore', { location_id: 'eastern_mbale' });
   expect(fetchMock).toHaveBeenCalledTimes(2);
 });
-it('expires a cached response after five minutes', async () => {
+it('expires a cached response at thirty seconds', async () => {
   let clock = 1000;
   vi.spyOn(Date, 'now').mockImplementation(() => clock);
   fetchMock.mockResolvedValue({ ok: true, json: async () => ({}) });
   await api('locations');
-  clock += 300001;
+  clock += 29999;
+  await api('locations');
+  expect(fetchMock).toHaveBeenCalledTimes(1);
+  clock += 1;
   await api('locations');
   expect(fetchMock).toHaveBeenCalledTimes(2);
 });
@@ -46,5 +49,18 @@ it('does not cache an error', async () => {
   await expect(api('locations')).rejects.toThrow('Service unavailable');
   fetchMock.mockResolvedValueOnce({ ok: true, json: async () => [] });
   await expect(api('locations')).resolves.toEqual([]);
+  expect(fetchMock).toHaveBeenCalledTimes(2);
+});
+it('does not extend an almost expired server response for another thirty seconds', async () => {
+  let clock = 1000;
+  vi.spyOn(Date, 'now').mockImplementation(() => clock);
+  fetchMock.mockResolvedValue({
+    ok: true,
+    headers: new Headers({ 'X-Agro-Cache-Ttl-Ms': '1000' }),
+    json: async () => ({}),
+  });
+  await api('locations');
+  clock += 1000;
+  await api('locations');
   expect(fetchMock).toHaveBeenCalledTimes(2);
 });

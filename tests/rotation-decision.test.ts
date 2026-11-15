@@ -31,6 +31,19 @@ function assessment(overrides: Partial<Assessment> = {}): Assessment {
 it('gives a direct missing-evidence answer rather than calling the baseline suitable', () => {
   expect(rotationDecision(assessment()).title).toBe('No reliable rotation recommendation yet');
 });
+it('uses the same concise conclusion supplied by the backend and PDF', () => {
+  const conclusion = {
+    title: 'An option to explore',
+    detail: 'A reference-based option with timing still to check.',
+    tone: 'review' as const,
+    next_steps: ['Add dates.'],
+  };
+  expect(rotationDecision(assessment({ conclusion }))).toEqual({
+    title: conclusion.title,
+    detail: conclusion.detail,
+    tone: conclusion.tone,
+  });
+});
 it('puts a known baseline conflict ahead of an overall missing-evidence status', () => {
   expect(rotationDecision(assessment({ baseline: strategy('fail') }))).toMatchObject({
     tone: 'attention',

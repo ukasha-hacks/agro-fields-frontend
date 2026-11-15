@@ -4,6 +4,9 @@ export const criterionNames: Record<string, string> = {
   calendar_overlap: 'Season dates',
   growing_window_suitability: 'Growing season',
   agricultural_rule_coverage: 'Rotation evidence',
+  reference_rule_coverage: 'Checks cover your crops',
+  succession_evidence: 'Crop order',
+  perennial_management: 'Long-lived crops',
   priority_evidence: 'Your priority',
   mixed_crop_feasibility: 'Crops grown together',
   cropping_system: 'Crops grown together',
@@ -36,4 +39,20 @@ const messages: Record<string, string> = {
 };
 export function plainReason(message: string) {
   return messages[message] ?? message;
+}
+
+export function criterionLabel(criterion: string) {
+  if (criterionNames[criterion]) return criterionNames[criterion];
+  const suffixes: Record<string, string> = {
+    _soil_ph: 'Soil pH range',
+    _minimum_cycle_days: 'Minimum growing time',
+    _historical_temperature: 'Past temperature context',
+  };
+  for (const [suffix, name] of Object.entries(suffixes)) {
+    if (criterion.endsWith(suffix)) {
+      const crop = criterion.slice(0, -suffix.length).replaceAll('_', ' ');
+      return `${crop[0].toUpperCase()}${crop.slice(1)} · ${name}`;
+    }
+  }
+  return criterion.replaceAll('_', ' ');
 }

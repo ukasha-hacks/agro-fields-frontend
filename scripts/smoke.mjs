@@ -49,7 +49,8 @@ try {
   const locations = await (await get(base + 'locations')).json();
   assert.equal(locations.length, 4);
   const crops = await (await get(base + 'crops')).json();
-  assert.equal(crops.items.length, 4);
+  assert.equal(crops.items.length, 10);
+  assert.equal(locations[0].soil_reference.depth_cm[1], 20);
   const exploration = {
     location_id: 'northern_gulu',
     start_date: '2024-01-01',
@@ -77,6 +78,29 @@ try {
   assert.equal(result.alternatives.length, 2);
   assert.equal(result.unfilled_alternative_slots.length, 0);
   assert.ok(result.alternatives.every((option) => option.local_review_required));
+  assert.ok(result.conclusion.title);
+  assert.equal(
+    result.baseline.checks.find((check) => check.criterion === 'reference_rule_coverage').status,
+    'pass',
+  );
+  assert.equal(
+    result.baseline.checks.find((check) => check.criterion === 'maize_soil_ph').status,
+    'pass',
+  );
+  for (const crop of ['coffee_arabica', 'coffee_robusta', 'sugarcane', 'vanilla', 'cotton']) {
+    const response = await post('rotation-comparisons', {
+      ...rotation,
+      baseline_sequence: [1, 2, 3].map((season) => ({ season, crops: [crop] })),
+    });
+    assert.equal(response.status, 200);
+    const assessment = await response.json();
+    assert.equal(
+      assessment.baseline.checks.find((check) => check.criterion === 'reference_rule_coverage')
+        .status,
+      'pass',
+    );
+    assert.ok(assessment.conclusion.detail);
+  }
   assert.deepEqual(result.environmental_context.panels, data.panels);
   const conflicting = await post('rotation-comparisons', {
     ...rotation,

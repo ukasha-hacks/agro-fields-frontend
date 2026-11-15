@@ -4,10 +4,10 @@ A small Next.js and TypeScript frontend for the Agro Field FastAPI backend. Sour
 
 ## Current stage
 
-Use `stage/07-local-options` for the latest cumulative implementation. Use it with backend `stage/06-local-rules`; both branches include earlier work.
+Use `stage/08-clear-rotation-answer` for the latest cumulative implementation. Use it with backend `stage/07-complete-reference-checks`; both branches include earlier work.
 
 ```bash
-git clone --branch stage/07-local-options https://github.com/ukasha-hacks/agro-fields-frontend.git
+git clone --branch stage/08-clear-rotation-answer https://github.com/ukasha-hacks/agro-fields-frontend.git
 cd agro-fields-frontend
 ```
 
@@ -31,7 +31,7 @@ Next.js App Router, TypeScript, Tailwind CSS, DM Sans, shadcn-style Radix compon
 
 nuqs owns area, dates, topics, chart choice, replay position, open panel and the validated farmer draft. Zustand stores only light/dark and text size. No system theme. Form drafts are limited to a manageable link length; an oversized draft shows a warning. Do not put names or private notes in URL drafts. Shared links contain the form answers.
 
-Successful API results have a bounded five-minute memory cache. Catalog GET requests also have one-hour server revalidation. Failed requests and PDF files are not cached. API types are generated from the checked-in backend OpenAPI file; run `npm run api:types` after updating that contract.
+Successful API results have a bounded 30-second memory cache. Catalog GET requests also have 30-second server revalidation. Failed requests and PDF files are not cached. API types are generated from the checked-in backend OpenAPI file; run `npm run api:types` after updating that contract.
 
 ## Stages
 
@@ -43,7 +43,7 @@ Successful API results have a bounded five-minute memory cache. Catalog GET requ
 | stage/04-map-usability         | Drag fix, conditional reset, clear flow, skeletons and errors |
 | stage/05-evidence-and-guidance | Complete summaries, seasonal evidence, methods and help       |
 | stage/06-rotation-results | Visible bottom conclusion, inline historical graph and farm-input explanations |
-| stage/07-local-options | Local reference-based options, source checks, readable replay dates and compact popovers |
+| stage/08-clear-rotation-answer | Local reference-based options, source checks, readable replay dates and compact popovers |
 
 Each branch contains earlier work. README and DEVELOPMENT.md record the stage and checks.
 
@@ -99,8 +99,18 @@ The focused follow-up and deferred requests are recorded in [docs/SCOPE_REVIEW.m
 
 ## Test the local reference options
 
-Run this branch with backend `stage/06-local-rules`, then restart both services and refresh the browser. Pick Gulu, select 2024 and enter maize for your three planned seasons. With the supplied defaults, expect two reference-based options and a pinned result saying they need discussion. Open Checks and tradeoffs for pH, cycle length and past temperature values, then open the temperature evidence graph.
+Run this branch with backend `stage/07-complete-reference-checks`, then restart both services and refresh the browser. Pick Gulu, select 2024 and enter maize for your three planned seasons. With the supplied defaults, expect two reference-based options and a pinned result saying they need discussion. Open Checks and tradeoffs for pH, cycle length and past temperature values, then open the temperature evidence graph.
 
 Add a pH of 4.2 to see the maize reference conflict; the remaining crop ranges do not support two diverse alternatives. Coffee or banana can be recorded under Another crop, but their missing references are explained and the app does not automatically replace those growing systems. No external sources are fetched.
 
 Replay dates use plain month names: 2 May 2024 for a day and May 2024 for a full month. Partial periods keep both bounds. On a phone, the label moves below the replay heading. Area/help popovers fit the screen and can be closed with their close button, Escape or a tap outside. The local-adviser reminder stays visible.
+
+## Clear rotation answers and downloaded references
+
+The results panel now starts with one backend-generated conclusion, a short next step and compact alternative cards. Detailed checks, evidence graphs and source limits remain expandable. Labels distinguish missing farm answers from missing references and local review. The repeated adviser sentence was removed as requested.
+
+The crop catalog includes cotton, sugarcane, vanilla, banana (Musa acuminata), Arabica coffee and Robusta coffee alongside the original four crops. Data comes from downloaded original FAO sheets through the allowed GAEZ route. Perennial crops get species pH/temperature checks and a perennial-plan conclusion; the API does not suggest replacing them every season. Cotton uses its published minimum cycle for the declared seasonal plan.
+
+When a measured pH is absent, the enabled area estimate uses locally saved FAO HWSD v2.0 topsoil data. The form identifies its value and 0–20 cm depth; a checkbox disables it. A measured pH always wins. Planting and harvest dates still come from the farmer. Use this branch with backend stage/07-complete-reference-checks and restart both services.
+
+Catalog and browser response caches now expire at 30 seconds. The browser respects the server entry’s remaining lifetime instead of extending it for another full interval. Errors are not cached.

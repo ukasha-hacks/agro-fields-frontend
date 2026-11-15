@@ -3,10 +3,15 @@ import type { Category, Panel, RotationResponse } from './api';
 type Assessment = Pick<
   RotationResponse,
   'status' | 'baseline' | 'alternatives' | 'missing_information'
->;
+> &
+  Partial<Pick<RotationResponse, 'conclusion'>>;
 
 // A passed individual check must never become a claim that the whole plan is suitable.
 export function rotationDecision(result: Assessment) {
+  if (result.conclusion) {
+    const { title, detail, tone } = result.conclusion;
+    return { title, detail, tone };
+  }
   if (
     result.baseline.feasibility_status === 'infeasible' ||
     result.baseline.checks.some((check) => check.status === 'fail')

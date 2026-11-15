@@ -285,10 +285,7 @@ export function Explorer() {
           <StatusMessage error={catalog.error} retry={catalog.refetch} />
         </div>
       )}
-      <p className="decision-note">
-        This tool supports your decisions. It does not replace your own experience or local
-        agricultural advisers.
-      </p>
+
       <div className="map-footer">
         <span>Context map · FAO GAEZ</span>
         <Link href={infoLink('/sources')} className="flex items-center gap-1">

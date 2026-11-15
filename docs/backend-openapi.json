@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Agro Field",
-    "version": "0.2.0"
+    "version": "0.3.0"
   },
   "paths": {
     "/health": {
@@ -355,6 +355,23 @@
               }
             ],
             "title": "Source Url"
+          },
+          "gap_type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "farmer_input",
+                  "missing_reference",
+                  "local_review",
+                  "missing_observation"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Gap Type"
           }
         },
         "additionalProperties": false,
@@ -545,6 +562,33 @@
           "local_variety_validated": {
             "type": "boolean",
             "title": "Local Variety Validated"
+          },
+          "life_span": {
+            "type": "string",
+            "enum": [
+              "annual",
+              "perennial",
+              "annual_or_perennial",
+              "unknown"
+            ],
+            "title": "Life Span",
+            "default": "unknown"
+          },
+          "rotation_candidate": {
+            "type": "boolean",
+            "title": "Rotation Candidate",
+            "default": true
+          },
+          "life_span_source_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Life Span Source Url"
           }
         },
         "additionalProperties": false,
@@ -954,6 +998,16 @@
             "type": "string",
             "title": "Spatial Scope",
             "default": "gridded_point_sample"
+          },
+          "soil_reference": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/SoilReference"
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         },
         "additionalProperties": false,
@@ -1243,6 +1297,44 @@
         ],
         "title": "PlannedSeason"
       },
+      "RotationConclusion": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "detail": {
+            "type": "string",
+            "title": "Detail"
+          },
+          "tone": {
+            "type": "string",
+            "enum": [
+              "attention",
+              "review",
+              "complete"
+            ],
+            "title": "Tone"
+          },
+          "next_steps": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 3,
+            "title": "Next Steps"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "title",
+          "detail",
+          "tone",
+          "next_steps"
+        ],
+        "title": "RotationConclusion"
+      },
       "RotationRequest": {
         "properties": {
           "exploration": {
@@ -1402,6 +1494,9 @@
             "type": "object",
             "title": "Candidate Counts"
           },
+          "conclusion": {
+            "$ref": "#/components/schemas/RotationConclusion"
+          },
           "selection_method": {
             "type": "string",
             "title": "Selection Method",
@@ -1423,7 +1518,8 @@
           "missing_information",
           "sources",
           "warnings",
-          "candidate_counts"
+          "candidate_counts",
+          "conclusion"
         ],
         "title": "RotationResponse"
       },
@@ -1561,11 +1657,84 @@
               }
             ],
             "title": "Organic Carbon Percent"
+          },
+          "use_area_estimate": {
+            "type": "boolean",
+            "title": "Use Area Estimate",
+            "default": true
           }
         },
         "additionalProperties": false,
         "type": "object",
         "title": "SoilInput"
+      },
+      "SoilReference": {
+        "properties": {
+          "ph": {
+            "type": "number",
+            "maximum": 14.0,
+            "minimum": 0.0,
+            "title": "Ph"
+          },
+          "depth_cm": {
+            "prefixItems": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "integer"
+              }
+            ],
+            "type": "array",
+            "maxItems": 2,
+            "minItems": 2,
+            "title": "Depth Cm"
+          },
+          "mapping_unit_id": {
+            "type": "integer",
+            "title": "Mapping Unit Id"
+          },
+          "component_share_percent": {
+            "type": "number",
+            "maximum": 100.0,
+            "exclusiveMinimum": 0.0,
+            "title": "Component Share Percent"
+          },
+          "source_url": {
+            "type": "string",
+            "title": "Source Url"
+          },
+          "resolution": {
+            "type": "string",
+            "title": "Resolution"
+          },
+          "method": {
+            "type": "string",
+            "title": "Method"
+          },
+          "latitude": {
+            "type": "number",
+            "title": "Latitude"
+          },
+          "longitude": {
+            "type": "number",
+            "title": "Longitude"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "ph",
+          "depth_cm",
+          "mapping_unit_id",
+          "component_share_percent",
+          "source_url",
+          "resolution",
+          "method",
+          "latitude",
+          "longitude"
+        ],
+        "title": "SoilReference"
       },
       "Source": {
         "properties": {
@@ -1754,6 +1923,28 @@
             "type": "boolean",
             "title": "Local Review Required",
             "default": true
+          },
+          "summary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Summary"
+          },
+          "next_step": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Next Step"
           }
         },
         "additionalProperties": false,
