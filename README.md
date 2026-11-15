@@ -75,7 +75,7 @@ npm test
 npm run build
 ```
 
-48 automated checks cover dates, draft validation, real zero versus unknown soil values, URL round trips, map source integrity, the reset threshold, seasonal completeness, bounded caching and safe conclusion wording. Chart labels distinguish short daily selections and months across different years. TypeScript and the production build pass. To repeat the live integration check with the local backend and its existing virtual environment:
+53 automated checks cover dates, draft validation, real zero versus unknown soil values, URL round trips, map source integrity, the reset threshold, seasonal completeness, bounded caching and safe conclusion wording. Chart labels distinguish short daily selections and months across different years. TypeScript and the production build pass. To repeat the live integration check with the local backend and its existing virtual environment:
 
 ```bash
 node scripts/smoke.mjs ../agro-field-backend
@@ -120,3 +120,5 @@ Catalog and browser response caches now expire at 30 seconds. The browser respec
 In each repository, switch to main and run git pull --ff-only, keeping any local changes safe. Restart both the backend and frontend, then refresh the browser. Backend version 0.3.1 adds optional growing days and explicit needs_input responses. The matching frontend removes the long questions block and repeated adviser sentence from the assessment, requires crop choices before submission, and keeps detailed evidence collapsed.
 
 To test: open Next seasons and submit with Not sure selected; it asks for the affected crop choices. Choose crops or Fallow, optionally enter available growing days, and submit again. Saved links from earlier versions still open. Caching remains 30 seconds.
+
+Frontend 0.3.2 keeps backend 0.3.1 compatibility. See my result either opens the assessment or shows a focused message beside the button. Missing crops and invalid answers on another step no longer leave submission without feedback. Body-only hydration suppression handles attributes injected by browser extensions, following the Next.js hydration guidance: https://nextjs.org/docs/messages/react-hydration-error.

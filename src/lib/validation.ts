@@ -152,3 +152,35 @@ export function missingPlannedSeasons(value: FarmerValues): number[] {
     season.crops.includes('unknown') ? [index] : [],
   );
 }
+
+export function farmerSubmitIssue(value: unknown): { step: number; message: string } | null {
+  const parsed = farmerSchema.safeParse(value);
+  if (!parsed.success) {
+    const issue = parsed.error.issues[0];
+    const [section, index] = issue.path;
+    const step =
+      section === 'crop_history'
+        ? 1
+        : section === 'baseline_sequence' || section === 'repeats'
+          ? 3
+          : 2;
+    const label =
+      section === 'baseline_sequence' && typeof index === 'number'
+        ? `Season ${index + 1}`
+        : step === 1
+          ? 'Past crops'
+          : step === 2
+            ? 'Farm details'
+            : 'Next seasons';
+    return { step, message: `${label}: ${issue.message}` };
+  }
+  const missing = missingPlannedSeasons(parsed.data);
+  if (missing.length) {
+    const label = missing.length === 1 ? 'season' : 'seasons';
+    return {
+      step: 3,
+      message: `Choose crops or Fallow for ${label} ${missing.map((index) => index + 1).join(', ')}.`,
+    };
+  }
+  return null;
+}
