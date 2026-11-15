@@ -25,6 +25,16 @@ npm run dev
 
 Start the backend separately on port 8000, or set `BACKEND_URL` to its reachable address. Open http://localhost:3000. The backend must include stage 4. The same-origin Next.js proxy keeps its address on the server and avoids browser CORS setup.
 
+## Vercel connection
+
+The deployed frontend is https://agrofields.vercel.app and the deployed API is https://agrofield-api.vercel.app.
+
+In the frontend Vercel project, set `BACKEND_URL=https://agrofield-api.vercel.app` and redeploy. Set the base address only, without `/api/v1`. Production also uses this API when `BACKEND_URL` is unset or blank. Local development keeps `http://127.0.0.1:8000` as its default.
+
+In the backend Vercel project, set `CORS_ORIGINS=https://agrofields.vercel.app` and redeploy. The matching backend includes this origin by default. The browser still calls `/api/backend/*` on the frontend; the Next.js server forwards these requests to FastAPI. No additional frontend CORS headers are needed.
+
+To check the connection, open https://agrofields.vercel.app/api/backend/locations and confirm four sample areas are returned. Then select an area, open its historical graph, submit a complete crop plan and download a report. The existing 30-second cache remains in place.
+
 ## Stack and state
 
 Next.js App Router, TypeScript, Tailwind CSS, DM Sans, shadcn-style Radix components, Motion, Recharts, React Hook Form, Zod, nuqs and Zustand. DM Sans is bundled through Fontsource; no font request is made to Google at runtime.

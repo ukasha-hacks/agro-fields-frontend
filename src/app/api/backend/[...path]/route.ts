@@ -21,7 +21,11 @@ async function proxy(request: NextRequest, context: { params: Promise<{ path: st
       { error: { message: 'This data request is not supported.' } },
       { status: 404 },
     );
-  const base = (process.env.BACKEND_URL ?? 'http://127.0.0.1:8000').replace(/\/$/, '');
+  const defaultBackend =
+    process.env.NODE_ENV === 'production'
+      ? 'https://agrofield-api.vercel.app'
+      : 'http://127.0.0.1:8000';
+  const base = (process.env.BACKEND_URL?.trim() || defaultBackend).replace(/\/+$/, '');
   const cacheKey = `${base}/${key}`;
   const cached = request.method === 'GET' ? readCache.get(cacheKey) : undefined;
   if (cached && cached.until > Date.now()) {
