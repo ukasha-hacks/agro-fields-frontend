@@ -97,7 +97,8 @@ export function CropPicker({
           </Button>
         </div>
         <p className="mt-2 text-xs text-muted">
-          Other crops can be recorded, but may have no source reference.
+          The supplied files cover maize, beans, groundnut and sorghum. Other crops, including
+          coffee and banana, can be recorded but have no local reference here.
         </p>
         {error && (
           <p className="field-error" role="alert">
@@ -105,6 +106,12 @@ export function CropPicker({
           </p>
         )}
       </details>
+      {value.some((id) => id !== 'unknown' && !crops.some((crop) => crop.crop_id === id)) && (
+        <p className="mt-2 text-sm text-muted" role="status">
+          This selection includes a crop without a local reference. We will keep your answer, but
+          cannot check that crop or suggest replacing its growing system.
+        </p>
+      )}
     </fieldset>
   );
 }

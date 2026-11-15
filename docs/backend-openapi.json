@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Agro Field",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   "paths": {
     "/health": {
@@ -1334,6 +1334,7 @@
             "enum": [
               "assessed",
               "provisional",
+              "reference_only",
               "insufficient_evidence"
             ],
             "title": "Status"

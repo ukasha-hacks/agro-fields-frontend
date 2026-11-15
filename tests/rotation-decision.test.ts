@@ -37,6 +37,19 @@ it('puts a known baseline conflict ahead of an overall missing-evidence status',
     title: 'Your starting plan needs changes',
   });
 });
+it('labels local reference options without claiming a reviewed recommendation', () => {
+  expect(
+    rotationDecision(
+      assessment({
+        status: 'reference_only',
+        alternatives: [strategy('unknown'), strategy('unknown')],
+      }),
+    ),
+  ).toMatchObject({
+    tone: 'review',
+    title: '2 reference-based options to discuss',
+  });
+});
 it('keeps partial options provisional even if the response says assessed', () => {
   expect(
     rotationDecision(

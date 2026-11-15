@@ -15,7 +15,7 @@ import {
 } from 'recharts';
 import type { Panel } from '@/lib/api';
 import { formatValue } from '@/lib/utils';
-import { historyDateLabel } from '@/lib/history-dates';
+import { historyDateLabel, replayPeriodLabel } from '@/lib/history-dates';
 import { HelpTip } from './help-tip';
 const colors = ['var(--chart-green)', 'var(--chart-blue)', 'var(--chart-amber)'];
 export function HistoryChart({
@@ -98,7 +98,7 @@ export function HistoryChart({
                 return (
                   <div className="chart-tooltip">
                     <p>
-                      {point.period_start} to {point.period_end}
+                      {replayPeriodLabel(point.period_start, point.period_end, interval)}
                       {point.partial_calendar_month ? ' · partial month' : ''}
                     </p>
                     {series.map((item, seriesIndex) => {

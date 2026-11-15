@@ -133,9 +133,18 @@ export default function Methodology() {
           planned seasons describe the farmer’s starting rotation.
         </p>
         <p>
-          The current rule set still awaits agricultural review. We show the baseline checks and
-          explain unfilled alternative slots. We cannot give a defensible confidence percentage,
+          The current rule set still awaits agricultural review. Reference-based options compare the
+          saved species pH ranges, minimum cycle lengths and historical temperature mean. Any
+          missing temperature day leaves that mean unknown. Crop order and future growing conditions
+          are not validated by these checks. We cannot give a defensible confidence percentage,
           priority ranking, income estimate or water-saving figure from this evidence.
+        </p>
+        <p>
+          Only the existing local files are used. Options favor your preferred crops and distinct
+          crop combinations; this is a display order, not an agronomic ranking. Coffee and banana
+          have no reference in this archive. Their answers stay recorded, but we do not suggest
+          automatically replacing those systems. Annual rainfall ranges are not treated as seasonal
+          water needs. Missing evidence may leave fewer than two options.
         </p>
       </section>
       <section className="info-callout">

@@ -97,6 +97,32 @@ button svg {
   background: var(--surface);
   color: var(--ink);
   box-shadow: var(--shadow);
+  max-width: calc(100vw - 2rem);
+  max-height: min(32rem, var(--radix-popover-content-available-height, calc(100svh - 2rem)));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.popover-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.popover-dismiss {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.75rem;
+  background: var(--soft);
+}
+.location-option[aria-pressed='true'] {
+  background: var(--soft);
+}
+.location-popover {
+  max-height: min(25rem, var(--radix-popover-content-available-height, calc(100svh - 2rem)));
 }
 .sr-only {
   position: absolute;
@@ -1609,7 +1635,15 @@ button svg {
     bottom: 2.7rem;
     max-width: calc(100% - 4.6rem);
     padding: 0.6rem 0.75rem;
-    font-size: 0.65rem;
+    font-size: 0.75rem;
+  }
+  .area-card {
+    bottom: 10rem;
+    max-height: calc(100svh - 24rem);
+  }
+  .replay-period {
+    width: 100%;
+    margin-left: 0;
   }
   .map-notice {
     left: 0.8rem;

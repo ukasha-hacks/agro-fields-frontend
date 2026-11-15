@@ -75,8 +75,8 @@ export function RotationEvidence({
           <li>The plan and crops you avoid feed the listed constraint checks.</li>
           <li>Planting and harvest dates allow a check for overlapping seasons.</li>
           <li>
-            Crop history, water supply and pH need applicable reviewed rules for agricultural
-            checks.
+            Soil pH is compared with the saved species ranges when local reference checks are
+            enabled. Crop history and water supply still need reviewed succession and water rules.
           </li>
           <li>
             Soil texture and organic carbon are recorded for adviser review. The current engine does
@@ -85,6 +85,11 @@ export function RotationEvidence({
           <li>
             Crop preferences can order eligible options. They do not measure which option performs
             best.
+          </li>
+          <li>
+            Reference-based options compare broad crop ranges with your pH, planned minimum cycle
+            length and the past temperature mean. Annual rainfall ranges are not seasonal water
+            needs.
           </li>
           <li>
             Your main priority identifies the evidence still needed, rather than estimating a

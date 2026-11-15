@@ -25,6 +25,14 @@ export function rotationDecision(result: Assessment) {
         'Your plan is recorded. Reviewed local rules are needed before we can recommend a rotation.',
     };
   }
+  if (result.status === 'reference_only') {
+    return {
+      tone: 'review',
+      title: `${result.alternatives.length} reference-based options to discuss`,
+      detail:
+        'These options use the saved crop ranges. Crop order, seasonal water needs and expected benefits still need local review.',
+    };
+  }
   const strategies = [result.baseline, ...result.alternatives];
   if (
     result.status === 'provisional' ||

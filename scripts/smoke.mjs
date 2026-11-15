@@ -73,8 +73,10 @@ try {
   const assessment = await post('rotation-comparisons', rotation);
   assert.equal(assessment.status, 200);
   const result = await assessment.json();
-  assert.equal(result.status, 'insufficient_evidence');
-  assert.equal(result.unfilled_alternative_slots.length, 2);
+  assert.equal(result.status, 'reference_only');
+  assert.equal(result.alternatives.length, 2);
+  assert.equal(result.unfilled_alternative_slots.length, 0);
+  assert.ok(result.alternatives.every((option) => option.local_review_required));
   assert.deepEqual(result.environmental_context.panels, data.panels);
   const conflicting = await post('rotation-comparisons', {
     ...rotation,

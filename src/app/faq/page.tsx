@@ -20,7 +20,7 @@ const questions = [
   ],
   [
     'Why are there no recommended alternatives yet?',
-    'The current backend does not have reviewed local rotation rules. Basic crop reference ranges and past weather are not enough to confirm a safe or useful rotation. The assessment shows what is missing, rather than guessing.',
+    'Reviewed local rotation rules are still missing. The app can show reference-based ideas from the saved crop ranges, with the checks and gaps. They do not confirm crop order, seasonal water needs or benefits. A missing crop reference can prevent alternatives.',
   ],
   [
     'Can I enter soil test results?',

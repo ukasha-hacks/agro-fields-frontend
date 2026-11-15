@@ -106,6 +106,11 @@ export function RotationResults({ locations }: { locations: Location[] }) {
               </p>
               <h3>{decision.title}</h3>
               <p>{decision.detail}</p>
+              {result.data.status === 'reference_only' && (
+                <p className="text-xs">
+                  Local files only · Broad species checks · Not validated rotation advice
+                </p>
+              )}
               <HelpTip label="Why no best crop score?">
                 The data service does not have reviewed local rules for every crop, season, or
                 priority. A score would suggest more certainty than the evidence supports.
@@ -215,7 +220,7 @@ export function RotationResults({ locations }: { locations: Location[] }) {
                           target="_blank"
                           rel="noreferrer"
                         >
-                          Read rule source ↗
+                          Read source ↗
                         </a>
                       )}
                     </div>
@@ -231,7 +236,17 @@ export function RotationResults({ locations }: { locations: Location[] }) {
               </div>
             </section>
             <section>
-              <h3 className="form-section-title">Other rotation options</h3>
+              <h3 className="form-section-title">
+                {result.data.status === 'reference_only'
+                  ? 'Reference-based options to discuss'
+                  : 'Other rotation options'}
+              </h3>
+              {result.data.status === 'reference_only' && (
+                <p className="mt-2 text-sm leading-relaxed text-muted">
+                  These single-crop ideas use the supplied local references. They are not ranked by
+                  yield, income or soil benefit, and do not validate replacing crops grown together.
+                </p>
+              )}
               <div className="alternative-grid">
                 {result.data.alternatives.map((alternative, index) => (
                   <div className="alternative-card" key={alternative.strategy_id}>
@@ -248,12 +263,47 @@ export function RotationResults({ locations }: { locations: Location[] }) {
                         <li key={text}>{plainReason(text)}</li>
                       ))}
                     </ul>
+                    {alternative.checks.some((check) =>
+                      check.criterion.endsWith('_historical_temperature'),
+                    ) && (
+                      <Button
+                        size="small"
+                        variant="ghost"
+                        className="mt-2"
+                        onClick={() =>
+                          void setState(
+                            {
+                              view: 'history',
+                              topics: ['temperature'],
+                              focus: 'temperature',
+                              cursor: -1,
+                            },
+                            { history: 'push' },
+                          )
+                        }
+                      >
+                        Open temperature evidence
+                      </Button>
+                    )}
                     <details className="mt-3 text-xs">
                       <summary>Checks and tradeoffs</summary>
                       {alternative.checks.map((check) => (
                         <p key={check.criterion} className="mt-2">
                           {criterionNames[check.criterion] ?? humanize(check.criterion)}:{' '}
                           {humanize(check.status)}. {plainReason(check.reason)}
+                          {check.source_url && (
+                            <>
+                              {' '}
+                              <a
+                                className="underline"
+                                href={check.source_url}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                Source ↗
+                              </a>
+                            </>
+                          )}
                         </p>
                       ))}
                       {alternative.potential_benefits?.map((text) => (

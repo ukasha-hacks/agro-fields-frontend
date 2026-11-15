@@ -9,6 +9,7 @@ import { urlParsers, toExplore } from '@/lib/url-state';
 import { exploreSchema, type ExploreValues } from '@/lib/validation';
 import { downloadReport, type ExploreResponse, type Location } from '@/lib/api';
 import { formatValue } from '@/lib/utils';
+import { replayPeriodLabel } from '@/lib/history-dates';
 import { useApi } from '@/lib/use-api';
 import { HistoryChart } from './history-chart';
 import { HelpTip } from './help-tip';
@@ -38,6 +39,10 @@ export function HistoryPanel({ locations }: { locations: Location[] }) {
   const points = data?.panels[0]?.series[0]?.points ?? [];
   const max = Math.max(0, points.length - 1);
   const cursor = state.cursor > max ? -1 : state.cursor;
+  const period = cursor >= 0 ? points[cursor] : undefined;
+  const periodLabel = period
+    ? replayPeriodLabel(period.period_start, period.period_end, state.interval)
+    : 'Full selected period';
   const selectionKey = JSON.stringify(selection);
   useEffect(() => {
     if (data && state.focus)
@@ -202,14 +207,11 @@ export function HistoryPanel({ locations }: { locations: Location[] }) {
             <div className="flex flex-wrap items-center gap-2">
               <p className="text-sm font-medium">Walk through the past</p>
               <HelpTip label="Historical replay">
-                Move the slider to read a past period. The line marks that period on every graph.
-                This is a replay of observations, not a forecast. The country colour does not change
-                with weather.
+                Move the slider to read one past period on the graphs. These are past observations,
+                not a forecast.
               </HelpTip>
-              <span className="ml-auto text-xs text-muted">
-                {cursor >= 0
-                  ? `${points[cursor]?.period_start} to ${points[cursor]?.period_end}`
-                  : 'Full selected period'}
+              <span className="replay-period ml-auto text-sm text-muted" aria-live="polite">
+                {periodLabel}
               </span>
             </div>
             <div className="mt-3 flex items-center gap-3">
@@ -226,6 +228,7 @@ export function HistoryPanel({ locations }: { locations: Location[] }) {
                 className="replay-slider"
                 type="range"
                 aria-label="Historical period"
+                aria-valuetext={periodLabel}
                 min={0}
                 max={max}
                 value={Math.max(0, cursor)}

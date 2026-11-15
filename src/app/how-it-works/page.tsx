@@ -22,7 +22,7 @@ const steps = [
   {
     number: '04',
     title: 'Read the checks, ask the next question',
-    text: 'Your starting plan stays visible. Alternatives need supporting evidence. At present, reviewed local rotation rules are still missing, so the tool explains those gaps. Take the report to a local farming expert.',
+    text: 'Your starting plan stays visible. Reference-based options use the saved crop ranges and show the checks and gaps. They do not confirm crop order, seasonal water needs or expected benefits. Read Checks and tradeoffs, then take the report to a local farming expert.',
   },
 ];
 export default function HowItWorks() {

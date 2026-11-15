@@ -575,7 +575,7 @@ export interface components {
              * Status
              * @enum {string}
              */
-            status: "assessed" | "provisional" | "insufficient_evidence";
+            status: "assessed" | "provisional" | "reference_only" | "insufficient_evidence";
             baseline: components["schemas"]["Strategy"];
             /** Alternatives */
             alternatives: components["schemas"]["Strategy"][];
