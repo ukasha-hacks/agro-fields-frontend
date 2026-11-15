@@ -302,6 +302,7 @@ export function Explorer() {
           if (!value) void setState({ view: 'map' });
         }}
         title={label}
+        bodyClassName={state.view === 'results' ? 'sheet-body-results' : undefined}
         description={`${selected?.name ?? 'Choose an area'} · Historical archive, 2016–2025`}
       >
         {state.view === 'history' ? (

@@ -1,11 +1,11 @@
 'use client';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { LocateFixed, Minus, Plus } from 'lucide-react';
+import { LocateFixed, Minus, Plus, X } from 'lucide-react';
 import { countryPath, project, clampZoom, mapNeedsReset, type Country } from '@/lib/map-geometry';
 import type { Location } from '@/lib/api';
 import { Button } from './ui/button';
 import { HelpTip } from './help-tip';
-import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
+import { Popover, PopoverClose, PopoverContent, PopoverTrigger } from './ui/popover';
 import { ContentSkeleton } from './ui/skeleton';
 
 export function UgandaMap({
@@ -242,12 +242,16 @@ export function UgandaMap({
                       </text>
                     </g>
                   </PopoverTrigger>
-                  <PopoverContent className="map-popover w-72">
-                    <p className="font-semibold">{location.name}</p>
-                    <p className="mt-1 text-sm text-muted">{location.region} Uganda</p>
-                    <p className="mt-3 text-sm">Historical data: 2016–2025</p>
-                    <p className="mt-1 text-xs text-muted">
-                      One gridded sample point. It does not represent every farm in this area.
+                  <PopoverContent aria-label={location.name} className="map-popover w-72">
+                    <div className="popover-heading">
+                      <p className="font-medium">{location.name}</p>
+                      <PopoverClose className="popover-dismiss" aria-label="Close area information">
+                        <X size={16} />
+                      </PopoverClose>
+                    </div>
+                    <p className="text-sm text-muted">{location.region} Uganda · Sample point</p>
+                    <p className="mt-2 text-xs text-muted">
+                      Past records, 2016–2025. Your field may differ.
                     </p>
                   </PopoverContent>
                 </Popover>

@@ -6,6 +6,19 @@ export const criterionNames: Record<string, string> = {
   agricultural_rule_coverage: 'Rotation evidence',
   priority_evidence: 'Your priority',
   mixed_crop_feasibility: 'Crops grown together',
+  cropping_system: 'Crops grown together',
+  maize_soil_ph: 'Maize · Soil pH range',
+  beans_soil_ph: 'Beans · Soil pH range',
+  groundnut_soil_ph: 'Groundnut · Soil pH range',
+  sorghum_soil_ph: 'Sorghum · Soil pH range',
+  maize_minimum_cycle_days: 'Maize · Minimum growing time',
+  beans_minimum_cycle_days: 'Beans · Minimum growing time',
+  groundnut_minimum_cycle_days: 'Groundnut · Minimum growing time',
+  sorghum_minimum_cycle_days: 'Sorghum · Minimum growing time',
+  maize_historical_temperature: 'Maize · Past temperature context',
+  beans_historical_temperature: 'Beans · Past temperature context',
+  groundnut_historical_temperature: 'Groundnut · Past temperature context',
+  sorghum_historical_temperature: 'Sorghum · Past temperature context',
 };
 const messages: Record<string, string> = {
   'No reviewed agricultural rules are configured; species references alone do not validate rotations.':

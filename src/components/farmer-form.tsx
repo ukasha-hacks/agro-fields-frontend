@@ -132,7 +132,12 @@ export function FarmerForm({ locations }: { locations: Location[] }) {
           </Button>
         </div>
       )}
-      <StatusMessage loading={catalog.loading} error={catalog.error} retry={catalog.refetch} kind="form" />
+      <StatusMessage
+        loading={catalog.loading}
+        error={catalog.error}
+        retry={catalog.refetch}
+        kind="form"
+      />
       {catalog.data && (
         <form onSubmit={form.handleSubmit(submit, showErrors)} noValidate className="space-y-6">
           {step === 1 && (
@@ -434,6 +439,12 @@ export function FarmerForm({ locations }: { locations: Location[] }) {
               {saveError}
             </p>
           )}
+          {step === 3 && (
+            <p className="mb-4 text-sm leading-relaxed text-muted">
+              Your result will stay visible at the bottom of the next panel. If evidence is missing,
+              we will say so clearly.
+            </p>
+          )}
           <div className="form-actions">
             <Button
               type="button"
@@ -464,7 +475,7 @@ export function FarmerForm({ locations }: { locations: Location[] }) {
                 type="submit"
                 disabled={!explorationValid || form.formState.isSubmitting}
               >
-                Review my rotation
+                See my result
                 <ArrowRight />
               </Button>
             )}

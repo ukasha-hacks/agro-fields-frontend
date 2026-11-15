@@ -7,12 +7,14 @@ export function Sheet({
   onOpenChange,
   title,
   description,
+  bodyClassName,
   children,
 }: {
   open: boolean;
   onOpenChange: (value: boolean) => void;
   title: string;
   description: string;
+  bodyClassName?: string;
   children: React.ReactNode;
 }) {
   return (
@@ -41,7 +43,7 @@ export function Sheet({
               </Button>
             </Dialog.Close>
           </div>
-          <div className="sheet-body">{children}</div>
+          <div className={`sheet-body ${bodyClassName ?? ''}`}>{children}</div>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
