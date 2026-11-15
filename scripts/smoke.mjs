@@ -75,6 +75,21 @@ try {
   const result = await assessment.json();
   assert.equal(result.status, 'insufficient_evidence');
   assert.equal(result.unfilled_alternative_slots.length, 2);
+  assert.deepEqual(result.environmental_context.panels, data.panels);
+  const conflicting = await post('rotation-comparisons', {
+    ...rotation,
+    excluded_crops: ['maize'],
+  });
+  assert.equal(conflicting.status, 200);
+  const conflict = await conflicting.json();
+  assert.equal(conflict.baseline.feasibility_status, 'infeasible');
+  assert(
+    conflict.baseline.checks.some(
+      (check) => check.criterion === 'farmer_exclusions' && check.status === 'fail',
+    ),
+  );
+  // Farm answers affect checks, never the historical measurements shown in the graph.
+  assert.deepEqual(conflict.environmental_context.panels, data.panels);
   const report = await post('exports/pdf', { exploration, rotation });
   assert.equal(report.status, 200);
   assert.match(report.headers.get('content-type'), /application\/pdf/);

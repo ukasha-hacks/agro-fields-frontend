@@ -15,16 +15,19 @@ import {
 } from 'recharts';
 import type { Panel } from '@/lib/api';
 import { formatValue } from '@/lib/utils';
+import { historyDateLabel } from '@/lib/history-dates';
 import { HelpTip } from './help-tip';
 const colors = ['var(--chart-green)', 'var(--chart-blue)', 'var(--chart-amber)'];
 export function HistoryChart({
   panel,
   type,
   cursor,
+  interval,
 }: {
   panel: Panel;
   type: 'line' | 'bar';
   cursor: number;
+  interval: 'daily' | 'monthly';
 }) {
   const [showTable, setShowTable] = useState(false);
   const series = panel.series.filter((item) => item.visible_by_default);
@@ -39,13 +42,8 @@ export function HistoryChart({
       series.map((item) => [item.series_id, item.points[index]?.value ?? null]),
     ),
   }));
-  const label = (date: string) =>
-    new Date(date + 'T00:00:00Z').toLocaleDateString('en-GB', {
-      month: 'short',
-      day: points.length > 24 ? 'numeric' : undefined,
-      year: points.length > 24 ? '2-digit' : undefined,
-      timeZone: 'UTC',
-    });
+  const showYear = new Set(points.map((point) => point.period_start.slice(0, 4))).size > 1;
+  const label = (date: string) => historyDateLabel(date, interval, showYear);
   const Common = type === 'bar' ? BarChart : LineChart;
   const help =
     panel.category === 'soil_wetness'

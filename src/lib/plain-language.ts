@@ -6,6 +6,7 @@ export const criterionNames: Record<string, string> = {
   agricultural_rule_coverage: 'Rotation evidence',
   priority_evidence: 'Your priority',
   mixed_crop_feasibility: 'Crops grown together',
+  cropping_system: 'Crops grown together',
 };
 const messages: Record<string, string> = {
   'No reviewed agricultural rules are configured; species references alone do not validate rotations.':

@@ -4,10 +4,10 @@ A small Next.js and TypeScript frontend for the Agro Field FastAPI backend. Sour
 
 ## Current stage
 
-Use `stage/05-evidence-and-guidance` for the full implementation. Main is a branch guide until the stages are merged.
+Use `stage/06-rotation-results` for the latest cumulative implementation. Earlier stages remain available; the latest result-panel improvements are on this branch.
 
 ```bash
-git clone --branch stage/05-evidence-and-guidance https://github.com/ukasha-hacks/agro-fields-frontend.git
+git clone --branch stage/06-rotation-results https://github.com/ukasha-hacks/agro-fields-frontend.git
 cd agro-fields-frontend
 ```
 
@@ -42,6 +42,7 @@ Successful API results have a bounded five-minute memory cache. Catalog GET requ
 | stage/03-farmer-workflow       | Farmer form, assessment, PDF, help and checks                 |
 | stage/04-map-usability         | Drag fix, conditional reset, clear flow, skeletons and errors |
 | stage/05-evidence-and-guidance | Complete summaries, seasonal evidence, methods and help       |
+| stage/06-rotation-results | Visible bottom conclusion, inline historical graph and farm-input explanations |
 
 Each branch contains earlier work. README and DEVELOPMENT.md record the stage and checks.
 
@@ -51,6 +52,7 @@ Each branch contains earlier work. README and DEVELOPMENT.md record the stage an
 - Open Explore history. Change dates and topics, use line or bar charts, open a values table, or move through past periods with the replay slider.
 - Add past crops, water availability, priorities and a three-season plan. Soil values and planned dates are optional. Unknown values remain unknown.
 - Review the baseline checks and missing evidence. The default backend has no reviewed rotation rules, so it does not invent alternatives.
+- Read the conclusion pinned to the bottom of the assessment. Known conflicts take priority over missing evidence. The inline line graph uses the historical context already returned by the backend, with graph topic saved in the URL. It does not predict crop outcomes.
 - Download a historical or combined PDF. The backend recomputes it using the same request.
 - Open How it works, Common questions, How we read the data, or Data and sources from the floating menu. Context is kept in the return link.
 
@@ -72,7 +74,7 @@ npm test
 npm run build
 ```
 
-26 automated checks cover dates, draft validation, real zero versus unknown soil values, URL round trips, map source integrity, the reset threshold, seasonal completeness and bounded caching. TypeScript and the production build pass. To repeat the live integration check with the local backend and its existing virtual environment:
+34 automated checks cover dates, draft validation, real zero versus unknown soil values, URL round trips, map source integrity, the reset threshold, seasonal completeness, bounded caching and safe conclusion wording. Chart labels distinguish short daily selections and months across different years. TypeScript and the production build pass. To repeat the live integration check with the local backend and its existing virtual environment:
 
 ```bash
 node scripts/smoke.mjs ../agro-field-backend

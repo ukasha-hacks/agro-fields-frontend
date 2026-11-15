@@ -272,7 +272,13 @@ export function HistoryPanel({ locations }: { locations: Location[] }) {
           </div>
           <div className="space-y-7">
             {data.panels.map((panel) => (
-              <HistoryChart key={panel.category} panel={panel} type={state.chart} cursor={cursor} />
+              <HistoryChart
+                key={panel.category}
+                panel={panel}
+                type={state.chart}
+                cursor={cursor}
+                interval={data.request.interval}
+              />
             ))}
           </div>
           <SeasonalHistory area={state.area} />

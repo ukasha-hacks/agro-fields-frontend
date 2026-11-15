@@ -75,9 +75,20 @@ export default function HowItWorks() {
           values should come from a test or a known measurement.
         </p>
         <p>
-          Review your answers before opening the assessment. Follow an Open evidence button to
-          return to the matching graph. An unfilled option means more supporting evidence is needed.
-          It is not a failed farm or a poor crop choice.
+          Choose See my result after checking your answers. Your result stays visible at the bottom
+          while you read the assessment. A conflict is shown clearly. When reviewed local rules are
+          missing, the result says that a reliable recommendation is not available yet.
+        </p>
+        <p>
+          Past conditions behind this assessment shows the selected sample’s rainfall, temperature
+          or wetness as a line graph. Switch topics and open View values to read the numbers and day
+          counts. Open full history to change dates. These past observations do not predict what
+          will happen in your planned crop seasons.
+        </p>
+        <p>
+          Expand How your farm answers affect this result to see which details feed checks and which
+          remain for an adviser to review. An unfilled option means more supporting evidence is
+          needed. It is not a failed farm or a poor crop choice.
         </p>
       </section>
       <section>
