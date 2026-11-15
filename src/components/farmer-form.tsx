@@ -1,10 +1,10 @@
 'use client';
 import { useEffect, useRef, useState } from 'react';
-import { Controller, useFieldArray, useForm, type FieldErrors } from 'react-hook-form';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryStates } from 'nuqs';
 import { useSearchParams } from 'next/navigation';
-import { ArrowLeft, ArrowRight, Plus, Trash2 } from 'lucide-react';
+import { ArrowLeft, ArrowRight, LoaderCircle, Plus, Trash2 } from 'lucide-react';
 import { urlParsers, toExplore } from '@/lib/url-state';
 import {
   defaultFarmer,
@@ -12,7 +12,7 @@ import {
   exploreSchema,
   optionalNumber,
   draftFitsUrl,
-  missingPlannedSeasons,
+  farmerSubmitIssue,
   type FarmerValues,
 } from '@/lib/validation';
 import type { CropCatalog, Location } from '@/lib/api';
@@ -34,10 +34,15 @@ export function FarmerForm({ locations }: { locations: Location[] }) {
   const { fields, append, remove } = useFieldArray({ control: form.control, name: 'crop_history' });
   const lastSent = useRef(JSON.stringify(state.farm ?? defaultFarmer));
   const [saveError, setSaveError] = useState('');
+  const [submitError, setSubmitError] = useState('');
+  const submitNotice = useRef<HTMLParagraphElement>(null);
   const step = Math.min(3, Math.max(1, state.step));
   const selected = locations.find((l) => l.location_id === state.area);
   const explorationValid = exploreSchema.safeParse(toExplore(state)).success && !!selected;
   const invalidSavedDraft = !!search.get('farm') && !state.farm;
+  useEffect(() => {
+    if (submitError) submitNotice.current?.focus();
+  }, [submitError, step]);
   useEffect(() => {
     const incoming = JSON.stringify(state.farm ?? defaultFarmer);
     if (incoming !== lastSent.current) {
@@ -70,35 +75,35 @@ export function FarmerForm({ locations }: { locations: Location[] }) {
         : (['water_supply', 'priority', 'soil', 'preferred_crops', 'excluded_crops'] as const);
     if (await form.trigger([...fields])) void setState({ step: step + 1 });
   }
-  function showErrors(errors: FieldErrors<FarmerValues>) {
-    if (errors.crop_history) void setState({ step: 1 });
-    else if (errors.soil || errors.preferred_crops || errors.excluded_crops)
-      void setState({ step: 2 });
-    else if (errors.baseline_sequence) void setState({ step: 3 });
+  function showErrors() {
+    const issue = farmerSubmitIssue(form.getValues());
+    setSubmitError(issue?.message ?? 'Check the highlighted answers before continuing.');
+    if (issue) void setState({ step: issue.step });
   }
   async function submit(values: FarmerValues) {
-    const missing = missingPlannedSeasons(values);
-    if (missing.length) {
-      await setState({ step: 3 });
-      for (const index of missing) {
-        form.setError(`baseline_sequence.${index}.crops`, {
-          message: `Choose a crop or Fallow for season ${index + 1}.`,
-        });
-      }
+    setSubmitError('');
+    const issue = farmerSubmitIssue(values);
+    if (issue) {
+      setSubmitError(issue.message);
+      await setState({ step: issue.step });
       return;
     }
     if (!explorationValid) {
-      setSaveError('Check your area and history dates before continuing.');
+      setSubmitError('Check your area and history dates before continuing.');
       return;
     }
     if (!draftFitsUrl(values)) {
-      setSaveError(
+      setSubmitError(
         'This draft is too long for a link. Use fewer past seasons or shorter season names.',
       );
       return;
     }
     setSaveError('');
-    await setState({ farm: values, view: 'results', step: 3 }, { history: 'push' });
+    try {
+      await setState({ farm: values, view: 'results', step: 3 }, { history: 'push' });
+    } catch {
+      setSubmitError('The result could not open. Please try again.');
+    }
   }
   const error = form.formState.errors;
   return (
@@ -151,7 +156,12 @@ export function FarmerForm({ locations }: { locations: Location[] }) {
         kind="form"
       />
       {catalog.data && (
-        <form onSubmit={form.handleSubmit(submit, showErrors)} noValidate className="space-y-6">
+        <form
+          onSubmit={form.handleSubmit(submit, showErrors)}
+          onChangeCapture={() => setSubmitError('')}
+          noValidate
+          className="space-y-6"
+        >
           {step === 1 && (
             <section className="space-y-5">
               <div>
@@ -512,6 +522,17 @@ export function FarmerForm({ locations }: { locations: Location[] }) {
               we will say so clearly.
             </p>
           )}
+          {submitError && (
+            <p
+              id="farm-submit-error"
+              ref={submitNotice}
+              tabIndex={-1}
+              className="field-error"
+              role="alert"
+            >
+              {submitError}
+            </p>
+          )}
           <div className="form-actions">
             <Button
               type="button"
@@ -540,10 +561,15 @@ export function FarmerForm({ locations }: { locations: Location[] }) {
               <Button
                 key="review"
                 type="submit"
-                disabled={!explorationValid || form.formState.isSubmitting}
+                disabled={form.formState.isSubmitting}
+                aria-describedby={submitError ? 'farm-submit-error' : undefined}
               >
-                See my result
-                <ArrowRight />
+                {form.formState.isSubmitting ? 'Opening result…' : 'See my result'}
+                {form.formState.isSubmitting ? (
+                  <LoaderCircle className="animate-spin" />
+                ) : (
+                  <ArrowRight />
+                )}
               </Button>
             )}
           </div>
