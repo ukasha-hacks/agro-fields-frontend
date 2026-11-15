@@ -97,8 +97,8 @@ export function CropPicker({
           </Button>
         </div>
         <p className="mt-2 text-xs text-muted">
-          The supplied files cover maize, beans, groundnut and sorghum. Other crops, including
-          coffee and banana, can be recorded but have no local reference here.
+          Choose a listed crop to use its saved reference. For coffee, choose Arabica or Robusta.
+          Other crop names can be recorded but may have no matching reference.
         </p>
         {error && (
           <p className="field-error" role="alert">

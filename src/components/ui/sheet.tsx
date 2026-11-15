@@ -32,10 +32,6 @@ export function Sheet({
               <Dialog.Description id="sheet-description" className="mt-2 text-sm text-muted">
                 {description}
               </Dialog.Description>
-              <p className="mt-3 text-xs leading-relaxed text-muted">
-                This tool supports your decisions. It does not replace your own experience or local
-                agricultural advisers.
-              </p>
             </div>
             <Dialog.Close asChild>
               <Button variant="secondary" size="icon" aria-label="Close panel">

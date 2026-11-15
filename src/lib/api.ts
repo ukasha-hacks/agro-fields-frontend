@@ -22,7 +22,7 @@ export class ApiError extends Error {
 
 // Cache only successful, read-only responses. No browser storage or cached PDF blobs.
 const cache = new Map<string, { until: number; value: unknown }>();
-const TTL = 5 * 60 * 1000;
+const TTL = 30 * 1000;
 const MAX_ITEMS = 20;
 export function clearApiCache() {
   cache.clear();
@@ -47,8 +47,10 @@ export async function api<T>(path: string, body?: unknown): Promise<T> {
     );
   }
   const value = await response.json();
+  const serverTtl = Number(response.headers?.get('X-Agro-Cache-Ttl-Ms') ?? TTL);
+  const remaining = Number.isFinite(serverTtl) ? Math.max(0, Math.min(TTL, serverTtl)) : TTL;
   if (cache.size >= MAX_ITEMS) cache.delete(cache.keys().next().value!);
-  cache.set(key, { until: Date.now() + TTL, value: structuredClone(value) });
+  cache.set(key, { until: Date.now() + remaining, value: structuredClone(value) });
   return value as T;
 }
 export async function downloadReport(exploration: ExploreRequest, rotation?: RotationRequest) {

@@ -200,6 +200,8 @@ export interface components {
             rule_id?: string | null;
             /** Source Url */
             source_url?: string | null;
+            /** Gap Type */
+            gap_type?: ("farmer_input" | "missing_reference" | "local_review" | "missing_observation") | null;
         };
         /** CropCatalog */
         CropCatalog: {
@@ -267,6 +269,19 @@ export interface components {
             source_url: string;
             /** Local Variety Validated */
             local_variety_validated: boolean;
+            /**
+             * Life Span
+             * @default unknown
+             * @enum {string}
+             */
+            life_span: "annual" | "perennial" | "annual_or_perennial" | "unknown";
+            /**
+             * Rotation Candidate
+             * @default true
+             */
+            rotation_candidate: boolean;
+            /** Life Span Source Url */
+            life_span_source_url?: string | null;
         };
         /** Description */
         Description: {
@@ -430,6 +445,7 @@ export interface components {
              * @default gridded_point_sample
              */
             spatial_scope: string;
+            soil_reference?: components["schemas"]["SoilReference"] | null;
         };
         /** MapLayer */
         MapLayer: {
@@ -537,6 +553,20 @@ export interface components {
             /** Harvest Date */
             harvest_date?: string | null;
         };
+        /** RotationConclusion */
+        RotationConclusion: {
+            /** Title */
+            title: string;
+            /** Detail */
+            detail: string;
+            /**
+             * Tone
+             * @enum {string}
+             */
+            tone: "attention" | "review" | "complete";
+            /** Next Steps */
+            next_steps: string[];
+        };
         /** RotationRequest */
         RotationRequest: {
             exploration: components["schemas"]["ExploreRequest"];
@@ -598,6 +628,7 @@ export interface components {
             candidate_counts: {
                 [key: string]: number;
             };
+            conclusion: components["schemas"]["RotationConclusion"];
             /**
              * Selection Method
              * @default constraint_checks_then_explicit_crop_preferences; no agronomic overall score
@@ -653,6 +684,35 @@ export interface components {
             texture?: string | null;
             /** Organic Carbon Percent */
             organic_carbon_percent?: number | null;
+            /**
+             * Use Area Estimate
+             * @default true
+             */
+            use_area_estimate: boolean;
+        };
+        /** SoilReference */
+        SoilReference: {
+            /** Ph */
+            ph: number;
+            /** Depth Cm */
+            depth_cm: [
+                number,
+                number
+            ];
+            /** Mapping Unit Id */
+            mapping_unit_id: number;
+            /** Component Share Percent */
+            component_share_percent: number;
+            /** Source Url */
+            source_url: string;
+            /** Resolution */
+            resolution: string;
+            /** Method */
+            method: string;
+            /** Latitude */
+            latitude: number;
+            /** Longitude */
+            longitude: number;
         };
         /** Source */
         Source: {
@@ -714,6 +774,10 @@ export interface components {
              * @default true
              */
             local_review_required: boolean;
+            /** Summary */
+            summary?: string | null;
+            /** Next Step */
+            next_step?: string | null;
         };
         /** ValidationError */
         ValidationError: {

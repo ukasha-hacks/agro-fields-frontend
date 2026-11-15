@@ -71,6 +71,7 @@ export const farmerSchema = z
     excluded_crops: z.array(cropChoice).max(30),
     preferred_crops: z.array(cropChoice).max(30),
     soil: z.object({
+      use_area_estimate: z.boolean().optional(),
       ph: z
         .number()
         .min(0, 'Use a pH between 0 and 14.')
@@ -132,7 +133,7 @@ export const defaultFarmer: FarmerValues = {
   priority: 'general',
   excluded_crops: [],
   preferred_crops: [],
-  soil: { ph: null, texture: null, organic_carbon_percent: null },
+  soil: { ph: null, texture: null, organic_carbon_percent: null, use_area_estimate: true },
   repeats: false,
 };
 

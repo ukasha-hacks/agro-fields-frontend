@@ -38,3 +38,7 @@ These primary references support documentation, not additional analysis layers o
 - FAO soil organic matter, cover and crop practices: https://www.fao.org/4/a0100e/a0100e07.htm
 
 The seasonal display derives its values from the existing 2016–2025 daily archive via the monthly analysis endpoint. Complete-year counts are calculated, not hardcoded. Mean monthly temperatures/wetness are averaged across complete corresponding calendar months. Three-month rainfall comparisons sum complete months per year, average those totals, and count strictly lower totals. They do not supply crop stress thresholds, a drought classification or future weather.
+
+## Supplemental local references
+
+The paired backend now includes six additional original FAO ECOCROP species sheets through the listed GAEZ resource: Arabica/Robusta coffee, banana (Musa acuminata), sugarcane, vanilla and cotton. FAO-linked HWSD v2.0 downloads supply four topsoil (0–20 cm) point estimates from the largest mapped component. These approximately 1 km references are labelled area estimates; they do not become farm measurements. The original URLs, source hashes, extraction method and raw selected rows are retained in the backend supplemental directory. No runtime source download is performed.

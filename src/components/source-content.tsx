@@ -79,8 +79,8 @@ export function SourceContent() {
           <div>
             <strong>FAO GAEZ / ECOCROP</strong>
             <p>
-              Crop reference ranges and the maize soil/terrain map provide broad context. They do
-              not validate a local rotation.
+              Crop reference ranges, downloaded HWSD sample-area soil estimates and the maize
+              soil/terrain map provide broad context. They do not validate a local rotation.
             </p>
           </div>
         </div>

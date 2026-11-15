@@ -64,7 +64,10 @@ export default function Methodology() {
               </tr>
               <tr>
                 <th scope="row">GAEZ-linked ECOCROP</th>
-                <td>Broad requirements for maize, beans, groundnut and sorghum.</td>
+                <td>
+                  Species ranges for food and cash crops, including coffee, sugarcane, vanilla and
+                  cotton.
+                </td>
                 <td>
                   Species reference ranges. Local crop varieties and seasonal requirements still
                   need validation.
@@ -135,16 +138,18 @@ export default function Methodology() {
         <p>
           The current rule set still awaits agricultural review. Reference-based options compare the
           saved species pH ranges, minimum cycle lengths and historical temperature mean. Any
-          missing temperature day leaves that mean unknown. Crop order and future growing conditions
-          are not validated by these checks. We cannot give a defensible confidence percentage,
-          priority ranking, income estimate or water-saving figure from this evidence.
+          missing temperature day leaves that mean unknown. When a measured pH is absent and the
+          option is enabled, the tool uses a clearly labelled HWSD sample-area estimate. Crop order
+          and future growing conditions are not validated by these checks. We cannot give a
+          defensible confidence percentage, priority ranking, income estimate or water-saving figure
+          from this evidence.
         </p>
         <p>
-          Only the existing local files are used. Options favor your preferred crops and distinct
-          crop combinations; this is a display order, not an agronomic ranking. Coffee and banana
-          have no reference in this archive. Their answers stay recorded, but we do not suggest
-          automatically replacing those systems. Annual rainfall ranges are not treated as seasonal
-          water needs. Missing evidence may leave fewer than two options.
+          Only downloaded local files are used. Options favor your preferred crops and distinct crop
+          combinations; this is a display order, not an agronomic ranking. Long-lived crops such as
+          coffee, banana, sugarcane and vanilla have saved references but are not generated as
+          seasonal replacements. Annual rainfall ranges are not treated as seasonal water needs.
+          Missing evidence may leave fewer than two options.
         </p>
       </section>
       <section className="info-callout">
@@ -154,10 +159,6 @@ export default function Methodology() {
           working archive. The explainer page describes some of these terms for learning. It does
           not imply those measurements are in the app. There are no placeholder weather values in
           the normal analysis.
-        </p>
-        <p>
-          This tool supports your decisions. It does not replace your own experience or local
-          agricultural advisers.
         </p>
       </section>
     </InfoPage>

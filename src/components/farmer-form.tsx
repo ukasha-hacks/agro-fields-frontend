@@ -287,9 +287,31 @@ export function FarmerForm({ locations }: { locations: Location[] }) {
                     <p className="field-error">{error.excluded_crops?.message}</p>
                   </div>
                   <p className="text-xs leading-relaxed text-muted">
-                    Only add soil values you know from a local source or soil test. Leave them blank
-                    when unsure.
+                    Enter measured soil values if you have them. Otherwise you can use the saved
+                    sample-area pH estimate.
                   </p>
+                  <Controller
+                    control={form.control}
+                    name="soil.use_area_estimate"
+                    render={({ field }) => (
+                      <label className="flex items-start gap-3 text-sm">
+                        <input
+                          type="checkbox"
+                          className="mt-1 h-5 w-5"
+                          checked={field.value ?? true}
+                          onChange={(event) => field.onChange(event.target.checked)}
+                        />
+                        <span>
+                          Use the area soil estimate when I have no measured pH.
+                          <span className="mt-1 block text-xs text-muted">
+                            {selected?.soil_reference
+                              ? `HWSD: pH ${selected.soil_reference.ph}, 0–20 cm. This is a mapped area estimate; your field may differ.`
+                              : 'No saved soil estimate is available for this area.'}
+                          </span>
+                        </span>
+                      </label>
+                    )}
+                  />
                   <div className="grid grid-cols-2 gap-4">
                     <div className="field">
                       <label htmlFor="soil-ph">
