@@ -5,6 +5,7 @@ import {
   farmerSchema,
   optionalNumber,
   draftFitsUrl,
+  missingPlannedSeasons,
 } from '../src/lib/validation';
 const valid = {
   location_id: 'gulu',
@@ -26,6 +27,23 @@ describe('exploration dates', () => {
   ])('rejects invalid selections %s', (change) =>
     expect(exploreSchema.safeParse({ ...valid, ...change }).success).toBe(false),
   );
+});
+
+it('saves incomplete drafts but requires all planned crop choices before submission', () => {
+  const draft = farmerSchema.parse(defaultFarmer);
+  expect(missingPlannedSeasons(draft)).toEqual([0, 1, 2]);
+  draft.baseline_sequence[0].crops = ['beans', 'groundnut'];
+  draft.baseline_sequence[1].crops = [];
+  expect(missingPlannedSeasons(draft)).toEqual([2]);
+  draft.baseline_sequence[2].crops = ['cotton'];
+  expect(missingPlannedSeasons(draft)).toEqual([]);
+  expect(draft.crop_history[0].crops).toEqual(['unknown']);
+});
+
+it.each([0, -1, 1.5, 3661])('rejects invalid available growing days: %s', (days) => {
+  const draft = structuredClone(defaultFarmer);
+  draft.baseline_sequence[0].planned_days = days;
+  expect(farmerSchema.safeParse(draft).success).toBe(false);
 });
 describe('farmer answers', () => {
   it('keeps unknown answers without guessing crops', () =>

@@ -102,6 +102,33 @@ try {
     assert.ok(assessment.conclusion.detail);
   }
   assert.deepEqual(result.environmental_context.panels, data.panels);
+  const unfinished = await post('rotation-comparisons', {
+    ...rotation,
+    baseline_sequence: rotation.baseline_sequence.map((season) => ({
+      ...season,
+      crops: season.season === 3 ? ['unknown'] : season.crops,
+    })),
+  });
+  const incomplete = await unfinished.json();
+  assert.equal(unfinished.status, 200);
+  assert.equal(incomplete.status, 'needs_input');
+  assert.equal(incomplete.conclusion.title, 'Choose crops for season 3');
+  assert.equal(incomplete.alternatives.length, 0);
+  const timed = await post('rotation-comparisons', {
+    ...rotation,
+    baseline_sequence: [1, 2, 3].map((season) => ({
+      season,
+      crops: ['groundnut'],
+      planned_days: 120,
+    })),
+  });
+  const duration = await timed.json();
+  assert.equal(timed.status, 200);
+  assert.equal(
+    duration.baseline.checks.find((check) => check.criterion === 'groundnut_minimum_cycle_days')
+      .status,
+    'pass',
+  );
   const conflicting = await post('rotation-comparisons', {
     ...rotation,
     excluded_crops: ['maize'],

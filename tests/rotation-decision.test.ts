@@ -31,6 +31,13 @@ function assessment(overrides: Partial<Assessment> = {}): Assessment {
 it('gives a direct missing-evidence answer rather than calling the baseline suitable', () => {
   expect(rotationDecision(assessment()).title).toBe('No reliable rotation recommendation yet');
 });
+
+it('asks for unfinished crop choices before offering a conclusion', () => {
+  expect(rotationDecision(assessment({ status: 'needs_input' }))).toMatchObject({
+    tone: 'attention',
+    title: 'Complete your crop choices',
+  });
+});
 it('uses the same concise conclusion supplied by the backend and PDF', () => {
   const conclusion = {
     title: 'An option to explore',

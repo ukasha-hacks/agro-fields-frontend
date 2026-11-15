@@ -55,6 +55,7 @@ const season = z
     season: z.number().int().min(1).max(3),
     season_label: z.string().max(100),
     crops: z.array(cropChoice).max(12),
+    planned_days: z.number().int('Use whole days.').min(1).max(3660).nullable().optional(),
     planting_date: dateText.nullable(),
     harvest_date: dateText.nullable(),
   })
@@ -126,6 +127,7 @@ export const defaultFarmer: FarmerValues = {
     season,
     season_label: `Season ${season}`,
     crops: ['unknown'],
+    planned_days: null,
     planting_date: null,
     harvest_date: null,
   })),
@@ -142,4 +144,11 @@ export function optionalNumber(value: unknown): number | null {
 }
 export function draftFitsUrl(value: FarmerValues): boolean {
   return encodeURIComponent(JSON.stringify(value)).length <= 6500;
+}
+
+// Incomplete drafts can be saved, but cannot be submitted as a finished plan.
+export function missingPlannedSeasons(value: FarmerValues): number[] {
+  return value.baseline_sequence.flatMap((season, index) =>
+    season.crops.includes('unknown') ? [index] : [],
+  );
 }

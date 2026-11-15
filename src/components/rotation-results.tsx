@@ -35,6 +35,7 @@ export function RotationResults({ locations }: { locations: Location[] }) {
   const result = useApi<RotationResponse>('rotation-comparisons', request, valid);
   const data = result.data;
   const decision = data ? rotationDecision(data) : undefined;
+  const needsInput = data?.status === 'needs_input';
   const [exporting, setExporting] = useState(false);
   const [exportError, setExportError] = useState('');
   async function exportPdf() {
@@ -50,9 +51,11 @@ export function RotationResults({ locations }: { locations: Location[] }) {
     }
   }
   function editAnswers() {
-    const phNeeded = data?.baseline.checks.some(
-      (check) => check.gap_type === 'farmer_input' && check.criterion.endsWith('soil_ph'),
-    );
+    const phNeeded =
+      !needsInput &&
+      data?.baseline.checks.some(
+        (check) => check.gap_type === 'farmer_input' && check.criterion.endsWith('soil_ph'),
+      );
     void setState({ view: 'farm', step: phNeeded ? 2 : 3 });
   }
   if (!valid)
@@ -146,39 +149,40 @@ export function RotationResults({ locations }: { locations: Location[] }) {
                 </div>
               </section>
             )}
-            <details id="rotation-checks" className="source-details">
-              <summary>Starting plan: checks and missing details</summary>
-              <RotationChecks checks={data.baseline.checks} />
-            </details>
-            <details className="source-details">
-              <summary>View past rainfall, temperature and soil wetness</summary>
-              <RotationEvidence
-                context={data.environmental_context}
-                priority={data.priority}
-                selected={state.focus}
-                onSelect={(category) => void setState({ focus: category })}
-                onOpenHistory={(category) =>
-                  void setState(
-                    { view: 'history', topics: [category], focus: category, cursor: -1 },
-                    { history: 'push' },
-                  )
-                }
-              />
-            </details>
-            <details className="source-details">
-              <summary>Sources and remaining limits</summary>
-              {data.sources.map((source) => (
-                <p key={source.source_id}>
-                  <a href={source.url} target="_blank" rel="noreferrer">
-                    {source.name} ↗
-                  </a>
-                  <span>{source.limitations}</span>
-                </p>
-              ))}
-              {data.missing_information.map((text) => (
-                <p key={text}>{text}</p>
-              ))}
-            </details>
+            {!needsInput && (
+              <>
+                <details id="rotation-checks" className="source-details">
+                  <summary>Starting plan: checks and missing details</summary>
+                  <RotationChecks checks={data.baseline.checks} />
+                </details>
+                <details className="source-details">
+                  <summary>View past rainfall, temperature and soil wetness</summary>
+                  <RotationEvidence
+                    context={data.environmental_context}
+                    priority={data.priority}
+                    selected={state.focus}
+                    onSelect={(category) => void setState({ focus: category })}
+                    onOpenHistory={(category) =>
+                      void setState(
+                        { view: 'history', topics: [category], focus: category, cursor: -1 },
+                        { history: 'push' },
+                      )
+                    }
+                  />
+                </details>
+                <details className="source-details">
+                  <summary>Sources and remaining limits</summary>
+                  {data.sources.map((source) => (
+                    <p key={source.source_id}>
+                      <a href={source.url} target="_blank" rel="noreferrer">
+                        {source.name} ↗
+                      </a>
+                      <span>{source.limitations}</span>
+                    </p>
+                  ))}
+                </details>
+              </>
+            )}
           </>
         )}
       </div>
@@ -190,12 +194,14 @@ export function RotationResults({ locations }: { locations: Location[] }) {
             <p className="decision-detail">{decision.detail}</p>
           </div>
           <div className="mt-3 flex flex-wrap gap-2">
-            <Button size="small" onClick={exportPdf} disabled={exporting}>
-              {exporting ? <LoaderCircle className="animate-spin" /> : <Download />}
-              {exporting ? 'Making PDF…' : 'Download report'}
-            </Button>
+            {!needsInput && (
+              <Button size="small" onClick={exportPdf} disabled={exporting}>
+                {exporting ? <LoaderCircle className="animate-spin" /> : <Download />}
+                {exporting ? 'Making PDF…' : 'Download report'}
+              </Button>
+            )}
             <Button size="small" variant="secondary" onClick={editAnswers}>
-              <ArrowLeft /> Edit answers
+              <ArrowLeft /> {needsInput ? 'Complete crop choices' : 'Edit answers'}
             </Button>
           </div>
           {exportError && (

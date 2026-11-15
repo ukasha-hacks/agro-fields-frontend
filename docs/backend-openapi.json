@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Agro Field",
-    "version": "0.3.0"
+    "version": "0.3.1"
   },
   "paths": {
     "/health": {
@@ -1287,6 +1287,19 @@
               }
             ],
             "title": "Harvest Date"
+          },
+          "planned_days": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 3660.0,
+                "minimum": 1.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Planned Days"
           }
         },
         "additionalProperties": false,
@@ -1427,6 +1440,7 @@
               "assessed",
               "provisional",
               "reference_only",
+              "needs_input",
               "insufficient_evidence"
             ],
             "title": "Status"

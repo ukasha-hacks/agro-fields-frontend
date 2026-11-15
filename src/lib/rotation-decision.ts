@@ -12,6 +12,13 @@ export function rotationDecision(result: Assessment) {
     const { title, detail, tone } = result.conclusion;
     return { title, detail, tone };
   }
+  if (result.status === 'needs_input') {
+    return {
+      tone: 'attention',
+      title: 'Complete your crop choices',
+      detail: 'Choose a crop or Fallow for every planned season before comparing this plan.',
+    };
+  }
   if (
     result.baseline.feasibility_status === 'infeasible' ||
     result.baseline.checks.some((check) => check.status === 'fail')

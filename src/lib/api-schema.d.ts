@@ -552,6 +552,8 @@ export interface components {
             planting_date?: string | null;
             /** Harvest Date */
             harvest_date?: string | null;
+            /** Planned Days */
+            planned_days?: number | null;
         };
         /** RotationConclusion */
         RotationConclusion: {
@@ -605,7 +607,7 @@ export interface components {
              * Status
              * @enum {string}
              */
-            status: "assessed" | "provisional" | "reference_only" | "insufficient_evidence";
+            status: "assessed" | "provisional" | "reference_only" | "needs_input" | "insufficient_evidence";
             baseline: components["schemas"]["Strategy"];
             /** Alternatives */
             alternatives: components["schemas"]["Strategy"][];
