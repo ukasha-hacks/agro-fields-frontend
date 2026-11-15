@@ -97,8 +97,8 @@ export default function Methodology() {
         <p>
           A partial month uses only its selected days and carries a partial-month label. A graph
           point stays empty if any expected daily value is missing. Zero remains zero.
-          Selected-period statistics can use the available days, so their available-day counts must
-          be read alongside the value.
+          Selected-period statistics also stay empty if any selected day is missing for that
+          measure. Available-day counts explain the coverage.
         </p>
         <p>
           Surface and root-zone wetness keep their 0–1 scale. We do not convert the index into a
