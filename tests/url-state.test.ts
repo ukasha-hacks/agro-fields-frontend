@@ -39,3 +39,11 @@ it('maps the query values to the backend contract', () => {
     interval: 'monthly',
   });
 });
+
+it('preserves optional growing days and accepts older saved drafts', () => {
+  const draft = structuredClone(defaultFarmer);
+  draft.baseline_sequence[0].planned_days = 120;
+  expect(urlParsers.farm.parse(urlParsers.farm.serialize(draft))).toEqual(draft);
+  for (const season of draft.baseline_sequence) delete season.planned_days;
+  expect(urlParsers.farm.parse(urlParsers.farm.serialize(draft))).toEqual(draft);
+});

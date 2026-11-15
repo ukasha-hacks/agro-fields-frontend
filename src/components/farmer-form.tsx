@@ -12,6 +12,7 @@ import {
   exploreSchema,
   optionalNumber,
   draftFitsUrl,
+  missingPlannedSeasons,
   type FarmerValues,
 } from '@/lib/validation';
 import type { CropCatalog, Location } from '@/lib/api';
@@ -73,8 +74,19 @@ export function FarmerForm({ locations }: { locations: Location[] }) {
     if (errors.crop_history) void setState({ step: 1 });
     else if (errors.soil || errors.preferred_crops || errors.excluded_crops)
       void setState({ step: 2 });
+    else if (errors.baseline_sequence) void setState({ step: 3 });
   }
   async function submit(values: FarmerValues) {
+    const missing = missingPlannedSeasons(values);
+    if (missing.length) {
+      await setState({ step: 3 });
+      for (const index of missing) {
+        form.setError(`baseline_sequence.${index}.crops`, {
+          message: `Choose a crop or Fallow for season ${index + 1}.`,
+        });
+      }
+      return;
+    }
     if (!explorationValid) {
       setSaveError('Check your area and history dates before continuing.');
       return;
@@ -412,6 +424,40 @@ export function FarmerForm({ locations }: { locations: Location[] }) {
                       />
                     )}
                   />
+                  <p className="field-error" role="alert">
+                    {error.baseline_sequence?.[index]?.crops?.message}
+                  </p>
+                  <Controller
+                    control={form.control}
+                    name={`baseline_sequence.${index}.planned_days`}
+                    render={({ field }) => (
+                      <div className="field mt-4">
+                        <label htmlFor={`growing-days-${index}`}>
+                          Available growing days{' '}
+                          <span className="text-xs text-muted">(optional)</span>
+                        </label>
+                        <input
+                          id={`growing-days-${index}`}
+                          type="number"
+                          min={1}
+                          max={3660}
+                          step={1}
+                          placeholder="For example, 120"
+                          value={field.value ?? ''}
+                          onChange={(event) => field.onChange(optionalNumber(event.target.value))}
+                          onBlur={field.onBlur}
+                          aria-invalid={!!error.baseline_sequence?.[index]?.planned_days}
+                          aria-describedby={`growing-days-help-${index} growing-days-error-${index}`}
+                        />
+                        <p id={`growing-days-help-${index}`} className="text-xs text-muted">
+                          Or add exact dates below. Dates take priority.
+                        </p>
+                        <p id={`growing-days-error-${index}`} className="field-error">
+                          {error.baseline_sequence?.[index]?.planned_days?.message}
+                        </p>
+                      </div>
+                    )}
+                  />
                   <details className="mt-4">
                     <summary className="text-xs text-muted">
                       Add planting and harvest dates <span className="opacity-70">(optional)</span>
@@ -444,7 +490,6 @@ export function FarmerForm({ locations }: { locations: Location[] }) {
                       ))}
                     </div>
                   </details>
-                  <p className="field-error">{error.baseline_sequence?.[index]?.crops?.message}</p>
                 </div>
               ))}
               <label className="check-label">
