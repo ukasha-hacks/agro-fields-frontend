@@ -55,3 +55,7 @@ Validation: 48 frontend tests, TypeScript, production build and real frontend-to
 Stage 10 fixes silent-looking form submission. The final action now shows a focused warning beside the button, names missing planned seasons, routes errors from hidden steps to their section and shows an opening state. Complete crop plans still open the existing results workflow. The reported extension-injected body attribute mismatch is scoped to body hydration warnings; descendant app content is still checked.
 
 Validation: 53 frontend tests, TypeScript and production build pass. Browser checks reproduced the missing-crop case, verified the visible focused alert and submitted the corrected plan into a real backend result. No backend contract or data change was needed. Caching remains 30 seconds.
+
+Stage 11 connects production to https://agrofield-api.vercel.app through the existing same-origin proxy. A configured BACKEND_URL still takes priority; an unset or blank value uses the deployed API in production and the local API during development. The README and environment example record the matching frontend/backend Vercel settings. No browser CORS headers or data changes were added. Caching remains 30 seconds.
+
+Validation: 57 frontend tests, TypeScript and the production build pass. New routing tests cover production, local development, blank settings and custom backend overrides. The production proxy smoke passes against the matching real backend for catalogs, historical values, rotation assessments, combined PDF export, invalid input and the route whitelist.
